@@ -42,7 +42,8 @@
     aphrodite: { pt: "Afrodite", en: "Aphrodite", es: "Afrodita", icon: "♀", period: "Arquétipo mitológico" },
     ares: { pt: "Ares", en: "Ares", es: "Ares", icon: "♂", period: "Arquétipo mitológico" },
     poseidon: { pt: "Poseidon", en: "Poseidon", es: "Poseidón", icon: "Ψ", period: "Arquétipo mitológico" },
-    asclepius: { pt: "Asclépio", en: "Asclepius", es: "Asclepio", icon: "ΑΣ", period: "Arquétipo mitológico" }
+    asclepius: { pt: "Asclépio", en: "Asclepius", es: "Asclepio", icon: "ΑΣ", period: "Arquétipo mitológico" },
+    custom: { pt: "Você", en: "You", es: "Tú", icon: "✎", period: "Sua frase" }
   };
 
   const order = [
@@ -105,6 +106,17 @@
     democritus: "assets/deities/hades.png",
     pythagoras: "assets/deities/apollo.png"
   };
+
+  const COLLECTIONS = [
+    { title: "Sabedoria", category: "Sabedoria", image: "athena" },
+    { title: "Coragem", category: "Coragem", image: "ares" },
+    { title: "Amor", category: "Amor", image: "aphrodite" },
+    { title: "Serenidade", category: "Serenidade", image: "hestia" },
+    { title: "Foco", category: "Foco", image: "artemis" },
+    { title: "Transformação", category: "Transformação", image: "persephone" },
+    { title: "Poder", category: "Poder", image: "zeus" },
+    { title: "Cura", category: "Cura", image: "asclepius" }
+  ];
 
   const rows = [
     ["socrates", "Conhecimento", "Autodomínio", "Vence primeiro a tua própria desordem.", "First conquer your own disorder.", "Vence primero tu propio desorden.", "Inspiração socrática: antes de convencer o mundo, organiza a própria alma."],
@@ -303,7 +315,8 @@
       lastOpen: "",
       lastNotification: "",
       lastRotationSlot: "",
-      lastDailyShown: ""
+      lastDailyShown: "",
+      customQuotes: []
     };
   }
 
@@ -338,6 +351,12 @@
     $("#lockQuote").addEventListener("click", () => setLockQuote(currentQuote().id));
     $("#detailsQuote").addEventListener("click", () => openDetails(currentQuote().id));
     $("#shuffleQuote").addEventListener("click", shuffle);
+    $("#createOpen").addEventListener("click", openCreate);
+    $("#createSave").addEventListener("click", saveCustomQuote);
+    $("#collections").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-collection]");
+      if (button) openCollection(button.dataset.collection);
+    });
 
     $("#quoteStage").addEventListener("pointerdown", (event) => {
       startX = event.clientX;
@@ -508,8 +527,10 @@
   }
 
   function renderAll() {
+    normalizeSelections();
     renderScreens();
     renderAuthors();
+    renderCollections();
     renderFilters();
     renderDaily();
     renderHome(false);
@@ -525,20 +546,19 @@
   }
 
   function renderAuthors() {
-    $("#authorChips").innerHTML = order.map((id) => {
+    $("#authorChips").innerHTML = authorOrder().map((id) => {
       const item = authors[id];
       return `<button class="chip ${state.selectedAuthor === id ? "active" : ""}" type="button" data-author="${id}">${escapeHtml(item.icon)} ${escapeHtml(authorName(id))}</button>`;
     }).join("");
   }
 
   function renderFilters() {
-    $("#authorFilter").innerHTML = order.map((id) => {
-      const item = authors[id];
+    $("#authorFilter").innerHTML = authorOrder().map((id) => {
       return `<option value="${id}">${escapeHtml(authorName(id))}</option>`;
     }).join("");
     $("#authorFilter").value = state.authorFilter;
 
-    const themes = [...new Set(quotes.map((quote) => quote.category))].sort((a, b) => a.localeCompare(b));
+    const themes = [...new Set(pool().map((quote) => quote.category))].sort((a, b) => a.localeCompare(b));
     $("#themeFilter").innerHTML = `<option value="all">Todos</option>${themes.map((theme) => `<option value="${escapeHtml(theme)}">${escapeHtml(theme)}</option>`).join("")}`;
     $("#themeFilter").value = state.themeFilter;
   }
@@ -549,12 +569,12 @@
     state.seen[quote.id] = state.seen[quote.id] || Date.now();
     $("#quoteTheme").textContent = `${quote.category} · ${quote.theme}`;
     $("#quoteText").textContent = `“${quoteText(quote)}”`;
-    $("#quoteAuthor").textContent = authorName(quote.author);
+    $("#quoteAuthor").textContent = displayAuthor(quote);
     $("#quotePeriod").textContent = author.period;
     $("#authorIcon").textContent = author.icon;
     $("#authorImage").src = imageForQuote(quote);
-    $("#authorImage").alt = authorName(quote.author);
-    $("#authorVisualLabel").textContent = authorName(quote.author);
+    $("#authorImage").alt = displayAuthor(quote);
+    $("#authorVisualLabel").textContent = displayAuthor(quote);
     $("#quoteCounter").textContent = `${homeList().indexOf(quote) + 1} / ${homeList().length}`;
     $("#quoteLanguage").textContent = LANG_LABEL[state.lang] || "Português";
     $("#dailyBadge").hidden = quote.id !== dailyQuote().id;
@@ -571,7 +591,7 @@
   function renderLibrary() {
     $("#librarySearch").value = state.librarySearch;
     const query = normalize(state.librarySearch);
-    const items = quotes.filter((quote) => {
+    const items = pool().filter((quote) => {
       if (state.authorFilter !== "all" && quote.author !== state.authorFilter) return false;
       if (state.themeFilter !== "all" && quote.category !== state.themeFilter) return false;
       if (!query) return true;
@@ -585,7 +605,7 @@
     $("#favoriteSort").value = state.favoriteSort;
     $("#favoriteCount").textContent = Object.keys(state.favs).length;
     const query = normalize(state.favoriteSearch);
-    const items = quotes.filter((quote) => state.favs[quote.id])
+    const items = pool().filter((quote) => state.favs[quote.id])
       .filter((quote) => !query || searchable(quote).includes(query))
       .sort(sortFavorites);
     $("#favoriteList").innerHTML = items.length ? items.map(card).join("") : `<div class="empty">Suas frases favoritas aparecerão aqui.</div>`;
@@ -600,7 +620,7 @@
     preview.style.setProperty("--deity-image", `url("${imageForQuote(quote)}")`);
     preview.classList.add("image");
     $("#lockPreviewQuote").textContent = `“${quoteText(quote)}”`;
-    $("#lockPreviewAuthor").textContent = authorName(quote.author);
+    $("#lockPreviewAuthor").textContent = displayAuthor(quote);
     $("#lockFont").value = state.lockFont;
     $("#lockFontSize").value = state.lockFontSize;
     $("#lockPreviewQuote").style.fontFamily = fontFamily(state.lockFont);
@@ -648,19 +668,22 @@
   }
 
   function card(quote) {
-    const author = authors[quote.author];
     const fav = Boolean(state.favs[quote.id]);
+    const del = quote.custom
+      ? `<button type="button" data-action="delete" data-id="${quote.id}" aria-label="Excluir frase">🗑</button>`
+      : "";
     return `
       <article class="quote-card">
         <img class="quote-card-image" src="${escapeHtml(imageForQuote(quote))}" alt="" loading="lazy" />
         <p>“${escapeHtml(quoteText(quote))}”</p>
         <footer>
-          <small>${escapeHtml(authorName(quote.author))} · ${escapeHtml(quote.theme)}</small>
+          <small>${escapeHtml(displayAuthor(quote))} · ${escapeHtml(quote.theme)}</small>
           <div class="mini-actions">
             <button type="button" data-action="details" data-id="${quote.id}" aria-label="Detalhes">i</button>
             <button type="button" data-action="favorite" data-id="${quote.id}" aria-label="Favoritar">${fav ? "♥" : "♡"}</button>
             <button type="button" data-action="share" data-id="${quote.id}" aria-label="Compartilhar">↗</button>
             <button type="button" data-action="lock" data-id="${quote.id}" aria-label="Tela de bloqueio">▣</button>
+            ${del}
           </div>
         </footer>
       </article>
@@ -675,6 +698,7 @@
     if (button.dataset.action === "favorite") toggleFavorite(id);
     if (button.dataset.action === "share") openShare(id);
     if (button.dataset.action === "lock") setLockQuote(id);
+    if (button.dataset.action === "delete") deleteCustomQuote(id);
   }
 
   function currentQuote() {
@@ -683,7 +707,7 @@
   }
 
   function homeList() {
-    return state.selectedAuthor === "all" ? quotes : quotes.filter((quote) => quote.author === state.selectedAuthor);
+    return state.selectedAuthor === "all" ? pool() : pool().filter((quote) => quote.author === state.selectedAuthor);
   }
 
   function move(step) {
@@ -695,7 +719,7 @@
 
   function shuffle() {
     state.selectedAuthor = "all";
-    state.cursor = Math.floor(Math.random() * quotes.length);
+    state.cursor = Math.floor(Math.random() * pool().length);
     save();
     go("home");
     renderAuthors();
@@ -721,7 +745,70 @@
   function renderDaily() {
     const quote = dailyQuote();
     $("#dailyText").textContent = `“${quoteText(quote)}”`;
-    $("#dailyAuthor").textContent = authorName(quote.author);
+    $("#dailyAuthor").textContent = displayAuthor(quote);
+  }
+
+  function renderCollections() {
+    const node = $("#collections");
+    if (!node) return;
+    node.innerHTML = COLLECTIONS.map((item) =>
+      `<button class="collection-card" type="button" data-collection="${escapeHtml(item.category)}" style="--col-image:url('${DEITY_IMAGES[item.image]}')"><span>${escapeHtml(item.title)}</span></button>`
+    ).join("");
+  }
+
+  function openCollection(category) {
+    state.authorFilter = "all";
+    state.themeFilter = category;
+    state.librarySearch = "";
+    save();
+    go("explore");
+    renderLibrary();
+    $("#libraryList").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function openCreate() {
+    $("#createText").value = "";
+    $("#createAuthor").value = "";
+    $("#createDialog").showModal();
+  }
+
+  function saveCustomQuote() {
+    const text = $("#createText").value.trim();
+    if (!text) {
+      toast("Escreva sua frase.");
+      return;
+    }
+    const authorLabel = $("#createAuthor").value.trim();
+    const quote = {
+      id: `custom_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+      author: "custom",
+      authorLabel,
+      category: "Minhas frases",
+      theme: "Pessoal",
+      text: { pt: text, en: text, es: text },
+      explain: "",
+      custom: true
+    };
+    state.customQuotes = customList().concat(quote);
+    state.authorFilter = "custom";
+    state.themeFilter = "all";
+    state.librarySearch = "";
+    save();
+    $("#createDialog").close();
+    go("explore");
+    renderAll();
+    toast("Frase criada.");
+  }
+
+  function deleteCustomQuote(id) {
+    state.customQuotes = customList().filter((quote) => quote.id !== id);
+    delete state.favs[id];
+    delete state.seen[id];
+    if (state.lockQuote === id) state.lockQuote = "quote_001";
+    if (shareQuoteId === id) shareQuoteId = quotes[0].id;
+    save();
+    renderAll();
+    toast("Frase removida.");
   }
 
   function maybeShowDaily() {
@@ -777,10 +864,10 @@
 
   function openDetails(id) {
     const quote = findQuote(id);
-    $("#detailsAuthorName").textContent = authorName(quote.author);
+    $("#detailsAuthorName").textContent = displayAuthor(quote);
     $("#detailsText").textContent = `“${quoteText(quote)}”`;
-    $("#detailsExplain").textContent = quote.explain;
-    $("#detailsTags").innerHTML = [quote.category, quote.theme, authors[quote.author].period].map((tag) => `<span>${escapeHtml(tag)}</span>`).join("");
+    $("#detailsExplain").textContent = quote.explain || (quote.custom ? "Sua frase pessoal." : "");
+    $("#detailsTags").innerHTML = [quote.category, quote.theme, (authors[quote.author] || authors.all).period].map((tag) => `<span>${escapeHtml(tag)}</span>`).join("");
     $("#detailsDialog").showModal();
   }
 
@@ -794,7 +881,7 @@
     const quote = findQuote(shareQuoteId);
     return {
       title: "Greek Wisdom",
-      text: `“${quoteText(quote)}” - ${authorName(quote.author)}\nCompartilhado via Greek Wisdom`,
+      text: `“${quoteText(quote)}” - ${displayAuthor(quote)}\nCompartilhado via Greek Wisdom`,
       url: `${location.origin}${location.pathname}?quote=${encodeURIComponent(quote.id)}`
     };
   }
@@ -845,7 +932,7 @@
     wrapText(ctx, `“${quoteText(quote)}”`, 540, 860, 760, 92, 7);
     ctx.fillStyle = "#d4af37";
     ctx.font = "600 42px Segoe UI, Arial";
-    ctx.fillText(authorName(quote.author), 540, 1295);
+    ctx.fillText(displayAuthor(quote), 540, 1295);
     ctx.fillStyle = "rgba(255,255,255,.64)";
     ctx.font = "400 28px Segoe UI, Arial";
     ctx.fillText("greek-wisdom.app", 540, 1710);
@@ -947,16 +1034,17 @@
 
   function sortFavorites(a, b) {
     if (state.favoriteSort === "alpha") return quoteText(a).localeCompare(quoteText(b));
-    if (state.favoriteSort === "author") return authors[a.author].pt.localeCompare(authors[b.author].pt);
+    if (state.favoriteSort === "author") return displayAuthor(a).localeCompare(displayAuthor(b));
     return (state.favs[b.id] || 0) - (state.favs[a.id] || 0);
   }
 
   function searchable(quote) {
-    const author = authors[quote.author];
+    const author = authors[quote.author] || authors.all;
     return normalize([
       quote.text.pt,
       quote.text.en,
       quote.text.es,
+      quote.authorLabel || "",
       author.pt,
       author.en,
       author.es,
@@ -966,8 +1054,30 @@
     ].join(" "));
   }
 
+  function customList() {
+    return Array.isArray(state.customQuotes) ? state.customQuotes : [];
+  }
+
+  function pool() {
+    return quotes.concat(customList());
+  }
+
+  function authorOrder() {
+    return customList().length ? order.concat("custom") : order;
+  }
+
+  function displayAuthor(quote) {
+    return quote && quote.authorLabel ? quote.authorLabel : authorName(quote.author);
+  }
+
+  function normalizeSelections() {
+    const ids = authorOrder();
+    if (!ids.includes(state.selectedAuthor)) state.selectedAuthor = "all";
+    if (!ids.includes(state.authorFilter)) state.authorFilter = "all";
+  }
+
   function findQuote(id) {
-    return quotes.find((quote) => quote.id === id) || quotes[0];
+    return pool().find((quote) => quote.id === id) || quotes[0];
   }
 
   function langBase() {

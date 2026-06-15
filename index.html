@@ -13,8 +13,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=Lora:wght@400;500;600&family=Marcellus&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="manifest" href="manifest.webmanifest?v=11" />
-    <link rel="stylesheet" href="styles.css?v=11" />
+    <link rel="manifest" href="manifest.webmanifest?v=12" />
+    <link rel="stylesheet" href="styles.css?v=12" />
     <title>Greek Wisdom</title>
   </head>
   <body>
@@ -114,6 +114,11 @@
             </div>
             <button class="icon-button primary" id="shuffleQuote" type="button" aria-label="Aleatório">⟳</button>
           </div>
+
+          <div class="section-label"><span>Coleções</span></div>
+          <div class="collections" id="collections"></div>
+
+          <button class="full-button" id="createOpen" type="button">＋ Criar minha frase</button>
 
           <label class="field">
             <span>Busca</span>
@@ -381,7 +386,23 @@
       <button class="full-button primary" id="finishOnboarding" type="button">Começar</button>
     </dialog>
 
+    <dialog id="createDialog" class="dialog">
+      <div class="dialog-head">
+        <strong>Criar minha frase</strong>
+        <button class="icon-button ghost" type="button" data-close="createDialog">×</button>
+      </div>
+      <label class="field">
+        <span>Frase</span>
+        <textarea id="createText" rows="3" maxlength="180" placeholder="Escreva sua afirmação..."></textarea>
+      </label>
+      <label class="field">
+        <span>Autor (opcional)</span>
+        <input id="createAuthor" type="text" maxlength="40" placeholder="Você" />
+      </label>
+      <button class="full-button primary" id="createSave" type="button">Salvar frase</button>
+    </dialog>
+
     <div class="toast" id="toast"></div>
-    <script src="app.js?v=11" defer></script>
+    <script src="app.js?v=12" defer></script>
   </body>
 </html>
