@@ -254,7 +254,10 @@
   function init() {
     setupStreak();
     const linked = handleDeepLink();
-    if (!linked) applyAutoRotation(false);
+    if (!linked) {
+      maybeShowDaily();
+      applyAutoRotation(false);
+    }
     bind();
     applyPrefs();
     renderAll();
@@ -299,7 +302,8 @@
       streak: 1,
       lastOpen: "",
       lastNotification: "",
-      lastRotationSlot: ""
+      lastRotationSlot: "",
+      lastDailyShown: ""
     };
   }
 
@@ -326,6 +330,7 @@
 
     $("#profileShortcut").addEventListener("click", () => go("settings"));
     $("#searchShortcut").addEventListener("click", () => go("explore"));
+    $("#dailyCard").addEventListener("click", goToDaily);
     $("#nextQuote").addEventListener("click", () => move(1));
     $("#prevQuote").addEventListener("click", () => move(-1));
     $("#favQuote").addEventListener("click", () => toggleFavorite(currentQuote().id));
@@ -506,6 +511,7 @@
     renderScreens();
     renderAuthors();
     renderFilters();
+    renderDaily();
     renderHome(false);
     renderLibrary();
     renderFavorites();
@@ -551,6 +557,7 @@
     $("#authorVisualLabel").textContent = authorName(quote.author);
     $("#quoteCounter").textContent = `${homeList().indexOf(quote) + 1} / ${homeList().length}`;
     $("#quoteLanguage").textContent = LANG_LABEL[state.lang] || "Português";
+    $("#dailyBadge").hidden = quote.id !== dailyQuote().id;
     $("#favQuote").textContent = state.favs[quote.id] ? "♥" : "♡";
     $("#favQuote").classList.toggle("favorite", Boolean(state.favs[quote.id]));
     if (animate) {
@@ -693,6 +700,50 @@
     go("home");
     renderAuthors();
     renderHome(true);
+  }
+
+  function todayKey() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  }
+
+  function dailyIndex() {
+    const key = todayKey();
+    let hash = 0;
+    for (let i = 0; i < key.length; i += 1) hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
+    return hash % quotes.length;
+  }
+
+  function dailyQuote() {
+    return quotes[dailyIndex()];
+  }
+
+  function renderDaily() {
+    const quote = dailyQuote();
+    $("#dailyText").textContent = `“${quoteText(quote)}”`;
+    $("#dailyAuthor").textContent = authorName(quote.author);
+  }
+
+  function maybeShowDaily() {
+    if (state.lastDailyShown === todayKey()) return false;
+    state.selectedAuthor = "all";
+    state.cursor = dailyIndex();
+    state.lastDailyShown = todayKey();
+    state.screen = "home";
+    save();
+    return true;
+  }
+
+  function goToDaily() {
+    state.selectedAuthor = "all";
+    state.cursor = dailyIndex();
+    state.lastDailyShown = todayKey();
+    save();
+    go("home");
+    renderAuthors();
+    renderHome(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    toast("Frase do dia.");
   }
 
   function go(screen) {

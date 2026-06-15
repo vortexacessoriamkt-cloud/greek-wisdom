@@ -13,8 +13,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=Lora:wght@400;500;600&family=Marcellus&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="manifest" href="manifest.webmanifest?v=10" />
-    <link rel="stylesheet" href="styles.css?v=10" />
+    <link rel="manifest" href="manifest.webmanifest?v=11" />
+    <link rel="stylesheet" href="styles.css?v=11" />
     <title>Greek Wisdom</title>
   </head>
   <body>
@@ -30,6 +30,15 @@
 
       <main>
         <section class="screen active" id="homeScreen" data-screen="home">
+          <button class="daily-card" id="dailyCard" type="button" aria-label="Ver a frase do dia">
+            <span class="daily-card-body">
+              <span class="eyebrow">Frase do dia</span>
+              <strong id="dailyText"></strong>
+              <small id="dailyAuthor"></small>
+            </span>
+            <span class="daily-card-arrow" aria-hidden="true">›</span>
+          </button>
+
           <div class="chips" id="authorChips"></div>
 
           <figure class="deity-visual" id="deityVisual">
@@ -50,7 +59,8 @@
           </article>
 
           <div class="quote-meta-row">
-            <span id="quoteCounter">1 / 71</span>
+            <span id="quoteCounter">1 / 95</span>
+            <span id="dailyBadge" class="daily-badge" hidden>★ Frase do dia</span>
             <span id="quoteLanguage">Português</span>
           </div>
 
@@ -372,6 +382,6 @@
     </dialog>
 
     <div class="toast" id="toast"></div>
-    <script src="app.js?v=10" defer></script>
+    <script src="app.js?v=11" defer></script>
   </body>
 </html>

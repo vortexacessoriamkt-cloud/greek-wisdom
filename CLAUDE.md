@@ -16,6 +16,7 @@ Greek Wisdom é um app mobile/PWA inspirado em apps de afirmações, com frases 
 ## Funcionalidades Já Implementadas
 
 - Home com frases, imagem do autor/deus e navegação anterior/próxima.
+- Frase do dia: seleção determinística por data, card premium na Home e destaque (★) ao visualizar a frase do dia; abre na frase do dia uma vez por dia.
 - Filtros por filósofo/deus.
 - Favoritos com persistência em `localStorage`.
 - Compartilhamento de texto/imagem.
