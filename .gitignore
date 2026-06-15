@@ -1,0 +1,23 @@
+# Runtime / dependencies
+node_modules/
+.android-tools/
+.gradle/
+android/.gradle/
+android/app/build/
+
+# Build artifacts
+*.apk
+*.aab
+*.ipa
+*.zip
+
+# Logs
+*.log
+*.err.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+

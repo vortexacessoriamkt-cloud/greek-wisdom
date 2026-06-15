@@ -1,0 +1,11 @@
+{
+  "name": "greek-wisdom",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Greek Wisdom: PWA/mobile app with Greek philosophy and mythology quotes.",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check app.js"
+  }
+}
+

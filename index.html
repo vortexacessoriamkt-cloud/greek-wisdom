@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Greek Wisdom: frases de filósofos gregos e arquétipos da mitologia grega." />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Greek Wisdom" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=Lora:wght@400;500;600&family=Marcellus&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="manifest" href="manifest.webmanifest?v=10" />
+    <link rel="stylesheet" href="styles.css?v=10" />
+    <title>Greek Wisdom</title>
+  </head>
+  <body>
+    <div class="app-shell" id="appShell">
+      <header class="topbar">
+        <button class="icon-button ghost" id="profileShortcut" type="button" aria-label="Perfil">G</button>
+        <div class="brand">
+          <span>GW</span>
+          <strong>Greek Wisdom</strong>
+        </div>
+        <button class="icon-button ghost" id="searchShortcut" type="button" aria-label="Buscar">⌕</button>
+      </header>
+
+      <main>
+        <section class="screen active" id="homeScreen" data-screen="home">
+          <div class="chips" id="authorChips"></div>
+
+          <figure class="deity-visual" id="deityVisual">
+            <img id="authorImage" alt="" />
+            <figcaption id="authorVisualLabel"></figcaption>
+          </figure>
+
+          <article class="quote-stage" id="quoteStage" aria-live="polite">
+            <p class="eyebrow" id="quoteTheme"></p>
+            <blockquote id="quoteText"></blockquote>
+            <div class="author-line">
+              <span id="authorIcon"></span>
+              <div>
+                <strong id="quoteAuthor"></strong>
+                <small id="quotePeriod"></small>
+              </div>
+            </div>
+          </article>
+
+          <div class="quote-meta-row">
+            <span id="quoteCounter">1 / 71</span>
+            <span id="quoteLanguage">Português</span>
+          </div>
+
+          <div class="actions">
+            <button class="icon-button" id="prevQuote" type="button" aria-label="Frase anterior">‹</button>
+            <button class="icon-button" id="favQuote" type="button" aria-label="Favoritar">♡</button>
+            <button class="icon-button" id="shareQuote" type="button" aria-label="Compartilhar">↗</button>
+            <button class="icon-button" id="lockQuote" type="button" aria-label="Tela de bloqueio">▣</button>
+            <button class="icon-button primary" id="nextQuote" type="button" aria-label="Próxima frase">›</button>
+          </div>
+
+          <button class="full-button" id="detailsQuote" type="button">Contexto da frase</button>
+
+          <details class="home-tuner">
+            <summary>Ajustar frase</summary>
+            <div class="tuner-grid">
+              <label class="field">
+                <span>Fonte</span>
+                <select id="homeFontMode">
+                  <option value="editorial">Editorial</option>
+                  <option value="classic">Clássica</option>
+                  <option value="mythic">Mitológica</option>
+                  <option value="lora">Literária</option>
+                  <option value="marcellus">Esculpida</option>
+                  <option value="serif">Serif elegante</option>
+                  <option value="sans">Moderna</option>
+                  <option value="mono">Monospace</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Tamanho</span>
+                <input id="homeFontSize" type="range" min="20" max="44" value="32" />
+              </label>
+              <label class="field">
+                <span>Horizontal</span>
+                <input id="quoteOffsetX" type="range" min="-80" max="80" value="0" />
+              </label>
+              <label class="field">
+                <span>Vertical</span>
+                <input id="quoteOffsetY" type="range" min="-110" max="110" value="0" />
+              </label>
+            </div>
+          </details>
+        </section>
+
+        <section class="screen" id="exploreScreen" data-screen="explore">
+          <div class="screen-head">
+            <div>
+              <p class="eyebrow">Biblioteca</p>
+              <h1>Explorar</h1>
+            </div>
+            <button class="icon-button primary" id="shuffleQuote" type="button" aria-label="Aleatório">⟳</button>
+          </div>
+
+          <label class="field">
+            <span>Busca</span>
+            <input id="librarySearch" type="search" placeholder="Autor, tema ou frase" />
+          </label>
+
+          <div class="two-col">
+            <label class="field">
+              <span>Autor</span>
+              <select id="authorFilter"></select>
+            </label>
+            <label class="field">
+              <span>Tema</span>
+              <select id="themeFilter"></select>
+            </label>
+          </div>
+
+          <div class="quote-list" id="libraryList"></div>
+        </section>
+
+        <section class="screen" id="favoritesScreen" data-screen="favorites">
+          <div class="screen-head">
+            <div>
+              <p class="eyebrow">Coleção</p>
+              <h1>Favoritos</h1>
+            </div>
+            <span class="counter" id="favoriteCount">0</span>
+          </div>
+
+          <label class="field">
+            <span>Busca</span>
+            <input id="favoriteSearch" type="search" placeholder="Buscar favoritos" />
+          </label>
+
+          <label class="field">
+            <span>Ordenação</span>
+            <select id="favoriteSort">
+              <option value="recent">Data adicionada</option>
+              <option value="alpha">Alfabética</option>
+              <option value="author">Por autor</option>
+            </select>
+          </label>
+
+          <div class="quote-list" id="favoriteList"></div>
+        </section>
+
+        <section class="screen" id="lockScreen" data-screen="lock">
+          <div class="screen-head">
+            <div>
+              <p class="eyebrow">Preview</p>
+              <h1>Tela de bloqueio</h1>
+            </div>
+            <button class="icon-button primary" id="saveLock" type="button" aria-label="Salvar">✓</button>
+          </div>
+
+          <div class="lock-preview" id="lockPreview">
+            <div class="lock-time">08:00</div>
+            <span class="lock-brand">Greek Wisdom</span>
+            <p id="lockPreviewQuote"></p>
+            <strong id="lockPreviewAuthor"></strong>
+          </div>
+
+          <div class="segmented" id="lockLayouts">
+            <button type="button" data-layout="center">Centro</button>
+            <button type="button" data-layout="gradient">Gradiente</button>
+            <button type="button" data-layout="pattern">Padrão</button>
+          </div>
+
+          <div class="settings-box compact">
+            <label class="field">
+              <span>Fonte do preview</span>
+              <select id="lockFont">
+                <option value="editorial">Editorial</option>
+                <option value="classic">Clássica</option>
+                <option value="mythic">Mitológica</option>
+                <option value="lora">Literária</option>
+                <option value="marcellus">Esculpida</option>
+                <option value="serif">Serif elegante</option>
+                <option value="sans">Moderna</option>
+                <option value="mono">Monospace</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Tamanho no preview</span>
+              <input id="lockFontSize" type="range" min="20" max="42" value="32" />
+            </label>
+          </div>
+        </section>
+
+        <section class="screen" id="settingsScreen" data-screen="settings">
+          <div class="screen-head">
+            <div>
+              <p class="eyebrow">Perfil</p>
+              <h1>Configurações</h1>
+            </div>
+            <button class="icon-button primary" id="saveSettings" type="button" aria-label="Salvar">✓</button>
+          </div>
+
+          <div class="profile-card">
+            <label class="avatar-picker">
+              <input id="profilePhotoInput" type="file" accept="image/*" />
+              <img id="profilePhoto" alt="" />
+              <span id="profileFallback">GW</span>
+            </label>
+            <label class="field">
+              <span>Nome</span>
+              <input id="profileName" type="text" maxlength="32" placeholder="Seu nome" />
+            </label>
+          </div>
+
+          <div class="stats">
+            <div><strong id="statSeen">0</strong><span>Vistas</span></div>
+            <div><strong id="statFavs">0</strong><span>Favoritos</span></div>
+            <div><strong id="statStreak">1</strong><span>Streak</span></div>
+          </div>
+
+          <div class="settings-box">
+            <div class="toggle-row">
+              <div>
+                <strong>Notificações diárias</strong>
+                <span>Frase do dia em horários escolhidos</span>
+              </div>
+              <label class="switch">
+                <input id="notificationsEnabled" type="checkbox" />
+                <span></span>
+              </label>
+            </div>
+            <label class="field">
+              <span>Frequência</span>
+              <select id="notificationFrequency">
+                <option value="1">1x ao dia</option>
+                <option value="2">2x ao dia</option>
+                <option value="3">3x ao dia</option>
+              </select>
+            </label>
+            <div class="three-col">
+              <label class="field"><span>Manhã</span><input id="timeOne" type="time" value="08:00" /></label>
+              <label class="field"><span>Tarde</span><input id="timeTwo" type="time" value="12:00" /></label>
+              <label class="field"><span>Noite</span><input id="timeThree" type="time" value="18:00" /></label>
+            </div>
+            <label class="field">
+              <span>Troca de frases e fundos</span>
+              <select id="rotationFrequency">
+                <option value="0">Manual</option>
+                <option value="1">1x ao dia</option>
+                <option value="2">2x ao dia</option>
+                <option value="3">3x ao dia</option>
+                <option value="6">6x ao dia</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="settings-box">
+            <label class="field">
+              <span>Idioma</span>
+              <select id="languageSelect">
+                <option value="ptBR">Português Brasil</option>
+                <option value="ptPT">Português Portugal</option>
+                <option value="enUS">English US</option>
+                <option value="esES">Español España</option>
+                <option value="esLA">Español Latinoamérica</option>
+              </select>
+            </label>
+            <div class="two-col">
+              <label class="field">
+                <span>Tema do app</span>
+                <select id="themeMode">
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Fonte da frase</span>
+                <select id="fontMode">
+                  <option value="editorial">Editorial</option>
+                  <option value="classic">Clássica</option>
+                  <option value="mythic">Mitológica</option>
+                  <option value="lora">Literária</option>
+                  <option value="marcellus">Esculpida</option>
+                  <option value="serif">Serif elegante</option>
+                  <option value="sans">Moderna</option>
+                  <option value="mono">Monospace</option>
+                </select>
+              </label>
+            </div>
+            <label class="field">
+              <span>Tamanho da frase</span>
+              <input id="fontSize" type="range" min="20" max="44" value="32" />
+            </label>
+            <label class="field">
+              <span>Qualidade da imagem</span>
+              <select id="imageQuality">
+                <option value="standard">Padrão</option>
+                <option value="high">Alta</option>
+              </select>
+            </label>
+            <div class="toggle-row">
+              <div>
+                <strong>Feedback háptico</strong>
+                <span>Vibração ao trocar frases</span>
+              </div>
+              <label class="switch">
+                <input id="hapticEnabled" type="checkbox" />
+                <span></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <div>
+                <strong>Sons</strong>
+                <span>Transição discreta</span>
+              </div>
+              <label class="switch">
+                <input id="soundEnabled" type="checkbox" />
+                <span></span>
+              </label>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <nav class="bottom-nav">
+        <button class="active" type="button" data-target="home">Início</button>
+        <button type="button" data-target="explore">Explorar</button>
+        <button type="button" data-target="favorites">Favoritos</button>
+        <button type="button" data-target="lock">Lock</button>
+        <button type="button" data-target="settings">Perfil</button>
+      </nav>
+    </div>
+
+    <dialog id="detailsDialog" class="dialog">
+      <div class="dialog-head">
+        <strong id="detailsAuthorName"></strong>
+        <button class="icon-button ghost" type="button" data-close="detailsDialog">×</button>
+      </div>
+      <p class="dialog-quote" id="detailsText"></p>
+      <p id="detailsExplain"></p>
+      <div class="tags" id="detailsTags"></div>
+    </dialog>
+
+    <dialog id="shareDialog" class="dialog share-dialog">
+      <div class="dialog-head">
+        <strong>Compartilhar</strong>
+        <button class="icon-button ghost" type="button" data-close="shareDialog">×</button>
+      </div>
+      <canvas id="shareCanvas" width="1080" height="1920"></canvas>
+      <div class="share-actions">
+        <button class="full-button" id="copyShare" type="button">Copiar texto</button>
+        <button class="full-button" id="nativeShare" type="button">Compartilhar</button>
+        <button class="full-button" id="downloadShare" type="button">Salvar PNG</button>
+      </div>
+    </dialog>
+
+    <dialog id="onboardingDialog" class="dialog onboarding-dialog">
+      <div class="onboarding-mark">GW</div>
+      <p class="eyebrow">Greek Wisdom</p>
+      <h2>Inspiração clássica para todos os dias</h2>
+      <p>Frases de filósofos gregos e arquétipos mitológicos com favoritos, busca, compartilhamento e preview de tela de bloqueio.</p>
+      <div class="onboarding-grid">
+        <span>Sabedoria</span>
+        <span>Estoicismo</span>
+        <span>Amor</span>
+        <span>Coragem</span>
+      </div>
+      <button class="full-button primary" id="finishOnboarding" type="button">Começar</button>
+    </dialog>
+
+    <div class="toast" id="toast"></div>
+    <script src="app.js?v=10" defer></script>
+  </body>
+</html>
