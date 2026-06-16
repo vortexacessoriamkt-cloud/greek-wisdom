@@ -1,6 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Greek Wisdom">
-  <rect width="512" height="512" fill="#000000"/>
-  <rect x="34" y="34" width="444" height="444" fill="none" stroke="#D4AF37" stroke-width="14"/>
-  <path d="M122 176h268M152 176v-36h208v36M178 176v166M246 176v166M314 176v166M140 342h232M112 386h288" fill="none" stroke="#FFFFFF" stroke-width="20" stroke-linecap="square" stroke-linejoin="miter"/>
-  <text x="256" y="456" text-anchor="middle" fill="#D4AF37" font-size="54" font-family="Georgia, 'Times New Roman', serif" font-weight="700">GW</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Greek Wisdom">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#141416"/>
+      <stop offset="1" stop-color="#000000"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="256" cy="205" r="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d4af37" stop-opacity="0.28"/>
+      <stop offset="0.6" stop-color="#d4af37" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="95" x2="0" y2="425" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#eecd7a"/>
+      <stop offset="1" stop-color="#b08c2e"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <rect width="512" height="512" fill="url(#glow)"/>
+  <g fill="url(#gold)">
+    <polygon points="256,95 105,182 407,182"/>
+    <rect x="118" y="184" width="276" height="26"/>
+    <rect x="141" y="215" width="34" height="159"/>
+    <rect x="190" y="215" width="34" height="159"/>
+    <rect x="239" y="215" width="34" height="159"/>
+    <rect x="288" y="215" width="34" height="159"/>
+    <rect x="337" y="215" width="34" height="159"/>
+    <rect x="115" y="376" width="282" height="21"/>
+    <rect x="95" y="399" width="323" height="26"/>
+  </g>
 </svg>

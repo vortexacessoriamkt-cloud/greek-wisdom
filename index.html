@@ -13,11 +13,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=Lora:wght@400;500;600&family=Marcellus&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="manifest" href="manifest.webmanifest?v=12" />
-    <link rel="stylesheet" href="styles.css?v=12" />
+    <link rel="manifest" href="manifest.webmanifest?v=13" />
+    <link rel="stylesheet" href="styles.css?v=13" />
     <title>Greek Wisdom</title>
   </head>
   <body>
+    <div class="splash" id="splash">
+      <img class="splash-mark" src="assets/icon.svg" alt="" />
+      <span class="splash-name">Greek Wisdom</span>
+    </div>
+
     <div class="app-shell" id="appShell">
       <header class="topbar">
         <button class="icon-button ghost" id="profileShortcut" type="button" aria-label="Perfil">G</button>
@@ -30,6 +35,7 @@
 
       <main>
         <section class="screen active" id="homeScreen" data-screen="home">
+          <p class="greeting" id="greeting"></p>
           <button class="daily-card" id="dailyCard" type="button" aria-label="Ver a frase do dia">
             <span class="daily-card-body">
               <span class="eyebrow">Frase do dia</span>
@@ -337,6 +343,11 @@
               </label>
             </div>
           </div>
+
+          <div class="settings-box">
+            <button class="full-button" id="redoWelcome" type="button">Refazer apresentação</button>
+            <button class="full-button danger" id="logout" type="button">Sair da conta</button>
+          </div>
         </section>
       </main>
 
@@ -372,19 +383,48 @@
       </div>
     </dialog>
 
-    <dialog id="onboardingDialog" class="dialog onboarding-dialog">
-      <div class="onboarding-mark">GW</div>
-      <p class="eyebrow">Greek Wisdom</p>
-      <h2>Inspiração clássica para todos os dias</h2>
-      <p>Frases de filósofos gregos e arquétipos mitológicos com favoritos, busca, compartilhamento e preview de tela de bloqueio.</p>
-      <div class="onboarding-grid">
-        <span>Sabedoria</span>
-        <span>Estoicismo</span>
-        <span>Amor</span>
-        <span>Coragem</span>
+    <div class="welcome" id="welcome" hidden>
+      <div class="welcome-inner">
+        <section class="welcome-step" data-step="hero">
+          <img class="welcome-mark" src="assets/icon.svg" alt="" />
+          <p class="eyebrow">Greek Wisdom</p>
+          <h1>Sabedoria grega para todos os dias</h1>
+          <p class="welcome-sub">Frases de filósofos e arquétipos da mitologia, com força prática para a sua rotina.</p>
+          <button class="full-button primary welcome-next" data-next="name" type="button">Começar</button>
+        </section>
+
+        <section class="welcome-step" data-step="name" hidden>
+          <p class="eyebrow">Bem-vindo(a)</p>
+          <h1>Como quer ser chamado(a)?</h1>
+          <p class="welcome-sub">Para deixar o app com a sua cara.</p>
+          <label class="field">
+            <span>Seu nome</span>
+            <input id="welcomeName" type="text" maxlength="32" placeholder="Seu nome" autocomplete="name" />
+          </label>
+          <button class="full-button primary" id="welcomeNameNext" type="button">Continuar</button>
+        </section>
+
+        <section class="welcome-step" data-step="focus" hidden>
+          <p class="eyebrow">Personalize</p>
+          <h1>O que você busca?</h1>
+          <p class="welcome-sub">Escolha alguns temas. Dá pra mudar quando quiser.</p>
+          <div class="welcome-chips" id="welcomeFocus"></div>
+          <button class="full-button primary welcome-next" data-next="notify" type="button">Continuar</button>
+        </section>
+
+        <section class="welcome-step" data-step="notify" hidden>
+          <p class="eyebrow">Hábito diário</p>
+          <h1>Quer um lembrete diário?</h1>
+          <p class="welcome-sub">Receba a frase do dia no horário que escolher.</p>
+          <label class="field">
+            <span>Horário</span>
+            <input id="welcomeTime" type="time" value="08:00" />
+          </label>
+          <button class="full-button primary" id="welcomeEnableNotif" type="button">Ativar lembrete</button>
+          <button class="full-button welcome-finish" type="button">Agora não</button>
+        </section>
       </div>
-      <button class="full-button primary" id="finishOnboarding" type="button">Começar</button>
-    </dialog>
+    </div>
 
     <dialog id="createDialog" class="dialog">
       <div class="dialog-head">
@@ -403,6 +443,6 @@
     </dialog>
 
     <div class="toast" id="toast"></div>
-    <script src="app.js?v=12" defer></script>
+    <script src="app.js?v=13" defer></script>
   </body>
 </html>

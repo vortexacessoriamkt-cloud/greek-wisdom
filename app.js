@@ -276,7 +276,8 @@
     registerServiceWorker();
     scheduleNotificationCheck();
     scheduleRotationCheck();
-    maybeShowOnboarding();
+    maybeShowWelcome();
+    hideSplashSoon();
   }
 
   function defaults() {
@@ -316,7 +317,8 @@
       lastNotification: "",
       lastRotationSlot: "",
       lastDailyShown: "",
-      customQuotes: []
+      customQuotes: [],
+      focusAreas: []
     };
   }
 
@@ -508,11 +510,36 @@
       state.imageQuality = event.target.value;
       save();
     });
-    $("#finishOnboarding").addEventListener("click", () => {
-      state.onboarded = true;
-      save();
-      $("#onboardingDialog").close();
+    $$("#welcome .welcome-next").forEach((button) => {
+      button.addEventListener("click", () => showWelcomeStep(button.dataset.next));
     });
+    $("#welcomeNameNext").addEventListener("click", () => {
+      state.name = $("#welcomeName").value.trim();
+      save();
+      renderSettings();
+      renderGreeting();
+      showWelcomeStep("focus");
+    });
+    $("#welcomeFocus").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-cat]");
+      if (!button) return;
+      const cat = button.dataset.cat;
+      const list = Array.isArray(state.focusAreas) ? state.focusAreas : [];
+      state.focusAreas = list.includes(cat) ? list.filter((item) => item !== cat) : list.concat(cat);
+      save();
+      renderWelcomeFocus();
+    });
+    $("#welcomeEnableNotif").addEventListener("click", () => {
+      state.notifications = true;
+      state.times[0] = $("#welcomeTime").value || state.times[0];
+      save();
+      scheduleNotificationCheck();
+      requestNotifications();
+      finishWelcome();
+    });
+    $$(".welcome-finish").forEach((button) => button.addEventListener("click", finishWelcome));
+    $("#redoWelcome").addEventListener("click", openWelcome);
+    $("#logout").addEventListener("click", logout);
 
     $$("[data-close]").forEach((button) => {
       button.addEventListener("click", () => {
@@ -533,6 +560,7 @@
     renderCollections();
     renderFilters();
     renderDaily();
+    renderGreeting();
     renderHome(false);
     renderLibrary();
     renderFavorites();
@@ -751,7 +779,9 @@
   function renderCollections() {
     const node = $("#collections");
     if (!node) return;
-    node.innerHTML = COLLECTIONS.map((item) =>
+    const focus = Array.isArray(state.focusAreas) ? state.focusAreas : [];
+    const items = COLLECTIONS.slice().sort((a, b) => (focus.includes(b.category) ? 1 : 0) - (focus.includes(a.category) ? 1 : 0));
+    node.innerHTML = items.map((item) =>
       `<button class="collection-card" type="button" data-collection="${escapeHtml(item.category)}" style="--col-image:url('${DEITY_IMAGES[item.image]}')"><span>${escapeHtml(item.title)}</span></button>`
     ).join("");
   }
@@ -1126,9 +1156,72 @@
     return false;
   }
 
-  function maybeShowOnboarding() {
+  function maybeShowWelcome() {
     if (state.onboarded) return;
-    requestAnimationFrame(() => $("#onboardingDialog").showModal());
+    openWelcome();
+  }
+
+  function openWelcome() {
+    $("#welcomeName").value = state.name || "";
+    renderWelcomeFocus();
+    showWelcomeStep("hero");
+    $("#welcome").hidden = false;
+  }
+
+  function showWelcomeStep(step) {
+    $$("#welcome .welcome-step").forEach((section) => {
+      section.hidden = section.dataset.step !== step;
+    });
+    const node = $("#welcome");
+    if (node) node.scrollTop = 0;
+  }
+
+  function renderWelcomeFocus() {
+    const list = Array.isArray(state.focusAreas) ? state.focusAreas : [];
+    $("#welcomeFocus").innerHTML = COLLECTIONS.map((item) =>
+      `<button type="button" class="welcome-chip ${list.includes(item.category) ? "active" : ""}" data-cat="${escapeHtml(item.category)}">${escapeHtml(item.title)}</button>`
+    ).join("");
+  }
+
+  function finishWelcome() {
+    state.name = ($("#welcomeName").value || state.name || "").trim();
+    state.onboarded = true;
+    save();
+    $("#welcome").hidden = true;
+    renderAll();
+  }
+
+  function logout() {
+    state.onboarded = false;
+    state.name = "";
+    state.photo = "";
+    save();
+    renderSettings();
+    openWelcome();
+    toast("Você saiu da conta.");
+  }
+
+  function timeGreeting() {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Bom dia";
+    if (hour < 18) return "Boa tarde";
+    return "Boa noite";
+  }
+
+  function renderGreeting() {
+    const el = $("#greeting");
+    if (!el) return;
+    const name = state.name ? state.name.split(" ")[0] : "";
+    el.textContent = name ? `${timeGreeting()}, ${name}.` : "";
+  }
+
+  function hideSplashSoon() {
+    const splash = $("#splash");
+    if (!splash) return;
+    setTimeout(() => {
+      splash.classList.add("hide");
+      setTimeout(() => { splash.hidden = true; }, 550);
+    }, 650);
   }
 
   function handleProfilePhoto(event) {
