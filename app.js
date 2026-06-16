@@ -118,6 +118,17 @@
     { title: "Cura", category: "Cura", image: "asclepius" }
   ];
 
+  const MOODS = [
+    { label: "Calma", cat: "Serenidade" },
+    { label: "Foco", cat: "Foco" },
+    { label: "Coragem", cat: "Coragem" },
+    { label: "Amor", cat: "Amor" },
+    { label: "Sabedoria", cat: "Sabedoria" },
+    { label: "Força", cat: "Poder" },
+    { label: "Gratidão", cat: "Alegria" },
+    { label: "Cura", cat: "Cura" }
+  ];
+
   const rows = [
     ["socrates", "Conhecimento", "Autodomínio", "Vence primeiro a tua própria desordem.", "First conquer your own disorder.", "Vence primero tu propio desorden.", "Inspiração socrática: antes de convencer o mundo, organiza a própria alma."],
     ["socrates", "Conhecimento", "Exame", "Questiona o caminho, mas continua caminhando.", "Question the path, but keep walking.", "Cuestiona el camino, pero sigue caminando.", "O exame socrático não paralisa; ele afia a direção da vida."],
@@ -318,7 +329,8 @@
       lastRotationSlot: "",
       lastDailyShown: "",
       customQuotes: [],
-      focusAreas: []
+      focusAreas: [],
+      mood: null
     };
   }
 
@@ -358,6 +370,13 @@
     $("#collections").addEventListener("click", (event) => {
       const button = event.target.closest("[data-collection]");
       if (button) openCollection(button.dataset.collection);
+    });
+    $("#moodCard").addEventListener("click", (event) => {
+      const pick = event.target.closest("[data-mood]");
+      if (pick) { chooseMood(pick.dataset.mood, pick.dataset.cat); return; }
+      const see = event.target.closest("[data-mood-see]");
+      if (see) { openCollection(see.dataset.moodSee); return; }
+      if (event.target.closest("[data-mood-reset]")) { state.mood = null; save(); renderMood(); }
     });
 
     $("#quoteStage").addEventListener("pointerdown", (event) => {
@@ -561,6 +580,7 @@
     renderFilters();
     renderDaily();
     renderGreeting();
+    renderMood();
     renderHome(false);
     renderLibrary();
     renderFavorites();
@@ -784,6 +804,43 @@
     node.innerHTML = items.map((item) =>
       `<button class="collection-card" type="button" data-collection="${escapeHtml(item.category)}" style="--col-image:url('${DEITY_IMAGES[item.image]}')"><span>${escapeHtml(item.title)}</span></button>`
     ).join("");
+  }
+
+  function todayMood() {
+    return state.mood && state.mood.date === todayKey() ? state.mood : null;
+  }
+
+  function renderMood() {
+    const node = $("#moodCard");
+    if (!node) return;
+    const mood = todayMood();
+    if (mood) {
+      node.innerHTML =
+        `<div class="mood-done">` +
+        `<div><span class="eyebrow">Sua intenção de hoje</span><strong>${escapeHtml(mood.label)}</strong></div>` +
+        `<div class="mood-actions"><button type="button" class="mood-chip" data-mood-see="${escapeHtml(mood.cat)}">Ver frases</button>` +
+        `<button type="button" class="mood-chip ghost" data-mood-reset>Trocar</button></div>` +
+        `</div>`;
+    } else {
+      node.innerHTML =
+        `<span class="eyebrow">Como você quer se sentir hoje?</span>` +
+        `<div class="mood-chips">${MOODS.map((m) => `<button type="button" class="mood-chip" data-mood="${escapeHtml(m.label)}" data-cat="${escapeHtml(m.cat)}">${escapeHtml(m.label)}</button>`).join("")}</div>`;
+    }
+  }
+
+  function chooseMood(label, cat) {
+    state.mood = { date: todayKey(), label, cat };
+    const list = pool().filter((quote) => quote.category === cat);
+    if (list.length) {
+      state.selectedAuthor = "all";
+      const quote = list[Math.floor(Math.random() * list.length)];
+      state.cursor = pool().indexOf(quote);
+    }
+    save();
+    renderMood();
+    renderAuthors();
+    renderHome(true);
+    toast(`Intenção de hoje: ${label}.`);
   }
 
   function openCollection(category) {

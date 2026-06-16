@@ -1281,3 +1281,66 @@ blockquote {
   border-color: #ff6b6b;
   color: #ff6b6b;
 }
+
+.mood-card {
+  margin-bottom: 16px;
+  padding: 14px 15px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
+}
+
+.mood-card:empty {
+  display: none;
+}
+
+.mood-card .eyebrow {
+  margin-bottom: 10px;
+}
+
+.mood-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mood-chip {
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--white);
+  color: var(--black);
+  font-weight: 600;
+  transition: transform 120ms ease, border-color 160ms ease;
+}
+
+.mood-chip:active {
+  transform: scale(0.96);
+}
+
+.mood-chip.ghost {
+  background: transparent;
+  color: var(--muted);
+}
+
+.mood-done {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mood-done strong {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--serif);
+  font-size: 20px;
+  color: var(--gold);
+}
+
+.mood-actions {
+  display: flex;
+  gap: 8px;
+  flex: 0 0 auto;
+}
