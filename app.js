@@ -314,6 +314,7 @@
   document.addEventListener("DOMContentLoaded", init);
 
   function init() {
+    bind();
     setupStreak();
     seedAchievements();
     const linked = handleDeepLink();
@@ -321,7 +322,6 @@
       maybeShowDaily();
       applyAutoRotation(false);
     }
-    bind();
     applyPrefs();
     renderAll();
     registerServiceWorker();
@@ -387,7 +387,11 @@
   }
 
   function save() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (error) {
+      /* armazenamento indisponível (ex.: navegação privada) — segue sem persistir */
+    }
   }
 
   function bind() {
