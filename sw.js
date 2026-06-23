@@ -1,10 +1,10 @@
-const CACHE_NAME = "greek-wisdom-v14";
+const CACHE_NAME = "greek-wisdom-v15";
 const FILES = [
   "./",
   "./index.html",
-  "./styles.css?v=14",
-  "./app.js?v=14",
-  "./manifest.webmanifest?v=14",
+  "./styles.css?v=15",
+  "./app.js?v=15",
+  "./manifest.webmanifest?v=15",
   "./assets/icon.svg",
   "./assets/apple-touch-icon.png",
   "./assets/icon-192.png",

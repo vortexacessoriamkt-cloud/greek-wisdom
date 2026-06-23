@@ -13,8 +13,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=Lora:wght@400;500;600&family=Marcellus&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="manifest" href="manifest.webmanifest?v=14" />
-    <link rel="stylesheet" href="styles.css?v=14" />
+    <link rel="manifest" href="manifest.webmanifest?v=15" />
+    <link rel="stylesheet" href="styles.css?v=15" />
     <title>Greek Wisdom</title>
   </head>
   <body>
@@ -35,7 +35,10 @@
 
       <main>
         <section class="screen active" id="homeScreen" data-screen="home">
-          <p class="greeting" id="greeting"></p>
+          <div class="today-head">
+            <p class="greeting" id="greeting"></p>
+            <span class="streak-chip" id="streakChip"></span>
+          </div>
           <button class="daily-card" id="dailyCard" type="button" aria-label="Ver a frase do dia">
             <span class="daily-card-body">
               <span class="eyebrow">Frase do dia</span>
@@ -245,6 +248,11 @@
           </div>
 
           <div class="settings-box">
+            <p class="eyebrow">Conquistas</p>
+            <div class="achievements" id="achievements"></div>
+          </div>
+
+          <div class="settings-box">
             <div class="toggle-row">
               <div>
                 <strong>Notificações diárias</strong>
@@ -314,6 +322,14 @@
               </label>
             </div>
             <label class="field">
+              <span>Ambiente</span>
+              <select id="bgMode">
+                <option value="classico">Clássico</option>
+                <option value="aurora">Aurora dourada</option>
+                <option value="marmore">Mármore</option>
+              </select>
+            </label>
+            <label class="field">
               <span>Tamanho da frase</span>
               <input id="fontSize" type="range" min="20" max="44" value="32" />
             </label>
@@ -354,11 +370,26 @@
       </main>
 
       <nav class="bottom-nav">
-        <button class="active" type="button" data-target="home">Início</button>
-        <button type="button" data-target="explore">Explorar</button>
-        <button type="button" data-target="favorites">Favoritos</button>
-        <button type="button" data-target="lock">Lock</button>
-        <button type="button" data-target="settings">Perfil</button>
+        <button class="active" type="button" data-target="home">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+          <span>Início</span>
+        </button>
+        <button type="button" data-target="explore">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>
+          <span>Explorar</span>
+        </button>
+        <button type="button" data-target="favorites">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21S4 15.5 4 9.8C4 7 6 5.5 8 5.5c1.6 0 2.9 1 4 2.3 1.1-1.3 2.4-2.3 4-2.3 2 0 4 1.5 4 4.3C20 15.5 12 21 12 21z"/></svg>
+          <span>Favoritos</span>
+        </button>
+        <button type="button" data-target="lock">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <span>Lock</span>
+        </button>
+        <button type="button" data-target="settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.6 3.1-5.5 7-5.5s7 1.9 7 5.5"/></svg>
+          <span>Perfil</span>
+        </button>
       </nav>
     </div>
 
@@ -445,6 +476,6 @@
     </dialog>
 
     <div class="toast" id="toast"></div>
-    <script src="app.js?v=14" defer></script>
+    <script src="app.js?v=15" defer></script>
   </body>
 </html>
