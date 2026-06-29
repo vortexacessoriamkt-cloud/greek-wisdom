@@ -13,8 +13,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=Lora:wght@400;500;600&family=Marcellus&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="manifest" href="manifest.webmanifest?v=16" />
-    <link rel="stylesheet" href="styles.css?v=16" />
+    <link rel="manifest" href="manifest.webmanifest?v=17" />
+    <link rel="stylesheet" href="styles.css?v=17" />
     <title>Greek Wisdom</title>
   </head>
   <body>
@@ -418,44 +418,15 @@
 
     <div class="welcome" id="welcome" hidden>
       <div class="welcome-inner">
-        <section class="welcome-step" data-step="hero">
-          <img class="welcome-mark" src="assets/icon.svg" alt="" />
-          <p class="eyebrow">Greek Wisdom</p>
-          <h1>Sabedoria grega para todos os dias</h1>
-          <p class="welcome-sub">Frases de filósofos e arquétipos da mitologia, com força prática para a sua rotina.</p>
-          <button class="full-button primary welcome-next" data-next="name" type="button">Começar</button>
-        </section>
-
-        <section class="welcome-step" data-step="name" hidden>
-          <p class="eyebrow">Bem-vindo(a)</p>
-          <h1>Como quer ser chamado(a)?</h1>
-          <p class="welcome-sub">Para deixar o app com a sua cara.</p>
-          <label class="field">
-            <span>Seu nome</span>
-            <input id="welcomeName" type="text" maxlength="32" placeholder="Seu nome" autocomplete="name" />
-          </label>
-          <button class="full-button primary" id="welcomeNameNext" type="button">Continuar</button>
-        </section>
-
-        <section class="welcome-step" data-step="focus" hidden>
-          <p class="eyebrow">Personalize</p>
-          <h1>O que você busca?</h1>
-          <p class="welcome-sub">Escolha alguns temas. Dá pra mudar quando quiser.</p>
-          <div class="welcome-chips" id="welcomeFocus"></div>
-          <button class="full-button primary welcome-next" data-next="notify" type="button">Continuar</button>
-        </section>
-
-        <section class="welcome-step" data-step="notify" hidden>
-          <p class="eyebrow">Hábito diário</p>
-          <h1>Quer um lembrete diário?</h1>
-          <p class="welcome-sub">Receba a frase do dia no horário que escolher.</p>
-          <label class="field">
-            <span>Horário</span>
-            <input id="welcomeTime" type="time" value="08:00" />
-          </label>
-          <button class="full-button primary" id="welcomeEnableNotif" type="button">Ativar lembrete</button>
-          <button class="full-button welcome-finish" type="button">Agora não</button>
-        </section>
+        <img class="welcome-mark" src="assets/icon.svg" alt="" />
+        <p class="eyebrow">Greek Wisdom</p>
+        <h1>Sabedoria grega para todos os dias</h1>
+        <p class="welcome-sub">Frases de filósofos e arquétipos da mitologia, com força prática para a sua rotina.</p>
+        <label class="field">
+          <span>Como quer ser chamado(a)? (opcional)</span>
+          <input id="welcomeName" type="text" maxlength="32" placeholder="Seu nome" autocomplete="name" />
+        </label>
+        <button class="full-button primary" id="welcomeStart" type="button">Começar</button>
       </div>
     </div>
 
@@ -476,6 +447,6 @@
     </dialog>
 
     <div class="toast" id="toast"></div>
-    <script src="app.js?v=16" defer></script>
+    <script src="app.js?v=17" defer></script>
   </body>
 </html>

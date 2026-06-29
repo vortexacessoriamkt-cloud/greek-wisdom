@@ -582,34 +582,7 @@
       save();
       applyPrefs();
     });
-    $$("#welcome .welcome-next").forEach((button) => {
-      button.addEventListener("click", () => showWelcomeStep(button.dataset.next));
-    });
-    $("#welcomeNameNext").addEventListener("click", () => {
-      state.name = $("#welcomeName").value.trim();
-      save();
-      renderSettings();
-      renderGreeting();
-      showWelcomeStep("focus");
-    });
-    $("#welcomeFocus").addEventListener("click", (event) => {
-      const button = event.target.closest("[data-cat]");
-      if (!button) return;
-      const cat = button.dataset.cat;
-      const list = Array.isArray(state.focusAreas) ? state.focusAreas : [];
-      state.focusAreas = list.includes(cat) ? list.filter((item) => item !== cat) : list.concat(cat);
-      save();
-      renderWelcomeFocus();
-    });
-    $("#welcomeEnableNotif").addEventListener("click", () => {
-      state.notifications = true;
-      state.times[0] = $("#welcomeTime").value || state.times[0];
-      save();
-      scheduleNotificationCheck();
-      requestNotifications();
-      finishWelcome();
-    });
-    $$(".welcome-finish").forEach((button) => button.addEventListener("click", finishWelcome));
+    $("#welcomeStart").addEventListener("click", finishWelcome);
     $("#redoWelcome").addEventListener("click", openWelcome);
     $("#logout").addEventListener("click", logout);
 
@@ -1329,24 +1302,7 @@
 
   function openWelcome() {
     $("#welcomeName").value = state.name || "";
-    renderWelcomeFocus();
-    showWelcomeStep("hero");
     $("#welcome").hidden = false;
-  }
-
-  function showWelcomeStep(step) {
-    $$("#welcome .welcome-step").forEach((section) => {
-      section.hidden = section.dataset.step !== step;
-    });
-    const node = $("#welcome");
-    if (node) node.scrollTop = 0;
-  }
-
-  function renderWelcomeFocus() {
-    const list = Array.isArray(state.focusAreas) ? state.focusAreas : [];
-    $("#welcomeFocus").innerHTML = COLLECTIONS.map((item) =>
-      `<button type="button" class="welcome-chip ${list.includes(item.category) ? "active" : ""}" data-cat="${escapeHtml(item.category)}">${escapeHtml(item.title)}</button>`
-    ).join("");
   }
 
   function finishWelcome() {

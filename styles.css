@@ -1185,6 +1185,8 @@ blockquote {
   inset: 0;
   z-index: 90;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   color: #fff;
   background:
     linear-gradient(180deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.92)),
@@ -1194,17 +1196,11 @@ blockquote {
 }
 
 .welcome-inner {
-  min-height: 100%;
   width: min(100%, 520px);
-  margin: 0 auto;
+  margin: auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   padding: calc(40px + env(safe-area-inset-top)) 26px calc(40px + env(safe-area-inset-bottom));
-}
-
-.welcome-step {
-  animation: in 280ms ease both;
 }
 
 .welcome-mark {
