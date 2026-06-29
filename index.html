@@ -13,11 +13,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=Lora:wght@400;500;600&family=Marcellus&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="manifest" href="manifest.webmanifest?v=10" />
-    <link rel="stylesheet" href="styles.css?v=10" />
+    <link rel="manifest" href="manifest.webmanifest?v=17" />
+    <link rel="stylesheet" href="styles.css?v=17" />
     <title>Greek Wisdom</title>
   </head>
   <body>
+    <div class="splash" id="splash">
+      <img class="splash-mark" src="assets/icon.svg" alt="" />
+      <span class="splash-name">Greek Wisdom</span>
+    </div>
+
     <div class="app-shell" id="appShell">
       <header class="topbar">
         <button class="icon-button ghost" id="profileShortcut" type="button" aria-label="Perfil">G</button>
@@ -30,6 +35,21 @@
 
       <main>
         <section class="screen active" id="homeScreen" data-screen="home">
+          <div class="today-head">
+            <p class="greeting" id="greeting"></p>
+            <span class="streak-chip" id="streakChip"></span>
+          </div>
+          <button class="daily-card" id="dailyCard" type="button" aria-label="Ver a frase do dia">
+            <span class="daily-card-body">
+              <span class="eyebrow">Frase do dia</span>
+              <strong id="dailyText"></strong>
+              <small id="dailyAuthor"></small>
+            </span>
+            <span class="daily-card-arrow" aria-hidden="true">›</span>
+          </button>
+
+          <div class="mood-card" id="moodCard"></div>
+
           <div class="chips" id="authorChips"></div>
 
           <figure class="deity-visual" id="deityVisual">
@@ -50,7 +70,8 @@
           </article>
 
           <div class="quote-meta-row">
-            <span id="quoteCounter">1 / 71</span>
+            <span id="quoteCounter">1 / 95</span>
+            <span id="dailyBadge" class="daily-badge" hidden>★ Frase do dia</span>
             <span id="quoteLanguage">Português</span>
           </div>
 
@@ -104,6 +125,11 @@
             </div>
             <button class="icon-button primary" id="shuffleQuote" type="button" aria-label="Aleatório">⟳</button>
           </div>
+
+          <div class="section-label"><span>Coleções</span></div>
+          <div class="collections" id="collections"></div>
+
+          <button class="full-button" id="createOpen" type="button">＋ Criar minha frase</button>
 
           <label class="field">
             <span>Busca</span>
@@ -222,6 +248,11 @@
           </div>
 
           <div class="settings-box">
+            <p class="eyebrow">Conquistas</p>
+            <div class="achievements" id="achievements"></div>
+          </div>
+
+          <div class="settings-box">
             <div class="toggle-row">
               <div>
                 <strong>Notificações diárias</strong>
@@ -291,6 +322,14 @@
               </label>
             </div>
             <label class="field">
+              <span>Ambiente</span>
+              <select id="bgMode">
+                <option value="classico">Clássico</option>
+                <option value="aurora">Aurora dourada</option>
+                <option value="marmore">Mármore</option>
+              </select>
+            </label>
+            <label class="field">
               <span>Tamanho da frase</span>
               <input id="fontSize" type="range" min="20" max="44" value="32" />
             </label>
@@ -322,15 +361,35 @@
               </label>
             </div>
           </div>
+
+          <div class="settings-box">
+            <button class="full-button" id="redoWelcome" type="button">Refazer apresentação</button>
+            <button class="full-button danger" id="logout" type="button">Sair da conta</button>
+          </div>
         </section>
       </main>
 
       <nav class="bottom-nav">
-        <button class="active" type="button" data-target="home">Início</button>
-        <button type="button" data-target="explore">Explorar</button>
-        <button type="button" data-target="favorites">Favoritos</button>
-        <button type="button" data-target="lock">Lock</button>
-        <button type="button" data-target="settings">Perfil</button>
+        <button class="active" type="button" data-target="home">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+          <span>Início</span>
+        </button>
+        <button type="button" data-target="explore">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>
+          <span>Explorar</span>
+        </button>
+        <button type="button" data-target="favorites">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21S4 15.5 4 9.8C4 7 6 5.5 8 5.5c1.6 0 2.9 1 4 2.3 1.1-1.3 2.4-2.3 4-2.3 2 0 4 1.5 4 4.3C20 15.5 12 21 12 21z"/></svg>
+          <span>Favoritos</span>
+        </button>
+        <button type="button" data-target="lock">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <span>Lock</span>
+        </button>
+        <button type="button" data-target="settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.6 3.1-5.5 7-5.5s7 1.9 7 5.5"/></svg>
+          <span>Perfil</span>
+        </button>
       </nav>
     </div>
 
@@ -357,21 +416,37 @@
       </div>
     </dialog>
 
-    <dialog id="onboardingDialog" class="dialog onboarding-dialog">
-      <div class="onboarding-mark">GW</div>
-      <p class="eyebrow">Greek Wisdom</p>
-      <h2>Inspiração clássica para todos os dias</h2>
-      <p>Frases de filósofos gregos e arquétipos mitológicos com favoritos, busca, compartilhamento e preview de tela de bloqueio.</p>
-      <div class="onboarding-grid">
-        <span>Sabedoria</span>
-        <span>Estoicismo</span>
-        <span>Amor</span>
-        <span>Coragem</span>
+    <div class="welcome" id="welcome" hidden>
+      <div class="welcome-inner">
+        <img class="welcome-mark" src="assets/icon.svg" alt="" />
+        <p class="eyebrow">Greek Wisdom</p>
+        <h1>Sabedoria grega para todos os dias</h1>
+        <p class="welcome-sub">Frases de filósofos e arquétipos da mitologia, com força prática para a sua rotina.</p>
+        <label class="field">
+          <span>Como quer ser chamado(a)? (opcional)</span>
+          <input id="welcomeName" type="text" maxlength="32" placeholder="Seu nome" autocomplete="name" />
+        </label>
+        <button class="full-button primary" id="welcomeStart" type="button">Começar</button>
       </div>
-      <button class="full-button primary" id="finishOnboarding" type="button">Começar</button>
+    </div>
+
+    <dialog id="createDialog" class="dialog">
+      <div class="dialog-head">
+        <strong>Criar minha frase</strong>
+        <button class="icon-button ghost" type="button" data-close="createDialog">×</button>
+      </div>
+      <label class="field">
+        <span>Frase</span>
+        <textarea id="createText" rows="3" maxlength="180" placeholder="Escreva sua afirmação..."></textarea>
+      </label>
+      <label class="field">
+        <span>Autor (opcional)</span>
+        <input id="createAuthor" type="text" maxlength="40" placeholder="Você" />
+      </label>
+      <button class="full-button primary" id="createSave" type="button">Salvar frase</button>
     </dialog>
 
     <div class="toast" id="toast"></div>
-    <script src="app.js?v=10" defer></script>
+    <script src="app.js?v=17" defer></script>
   </body>
 </html>

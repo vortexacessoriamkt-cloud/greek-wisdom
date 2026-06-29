@@ -1,10 +1,10 @@
-const CACHE_NAME = "greek-wisdom-v10";
+const CACHE_NAME = "greek-wisdom-v17";
 const FILES = [
   "./",
   "./index.html",
-  "./styles.css?v=10",
-  "./app.js?v=10",
-  "./manifest.webmanifest?v=10",
+  "./styles.css?v=17",
+  "./app.js?v=17",
+  "./manifest.webmanifest?v=17",
   "./assets/icon.svg",
   "./assets/apple-touch-icon.png",
   "./assets/icon-192.png",
@@ -43,8 +43,25 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
+  const request = event.request;
+  if (request.method !== "GET") return;
+
+  // Network-first for page navigations so the newest app always loads when online.
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put("./index.html", copy)).catch(() => {});
+          return response;
+        })
+        .catch(() => caches.match("./index.html").then((cached) => cached || caches.match("./")))
+    );
+    return;
+  }
+
+  // Cache-first for versioned assets and images (fast + offline).
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request).catch(() => caches.match("./index.html")))
+    caches.match(request).then((cached) => cached || fetch(request).catch(() => caches.match("./index.html")))
   );
 });

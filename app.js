@@ -42,7 +42,8 @@
     aphrodite: { pt: "Afrodite", en: "Aphrodite", es: "Afrodita", icon: "♀", period: "Arquétipo mitológico" },
     ares: { pt: "Ares", en: "Ares", es: "Ares", icon: "♂", period: "Arquétipo mitológico" },
     poseidon: { pt: "Poseidon", en: "Poseidon", es: "Poseidón", icon: "Ψ", period: "Arquétipo mitológico" },
-    asclepius: { pt: "Asclépio", en: "Asclepius", es: "Asclepio", icon: "ΑΣ", period: "Arquétipo mitológico" }
+    asclepius: { pt: "Asclépio", en: "Asclepius", es: "Asclepio", icon: "ΑΣ", period: "Arquétipo mitológico" },
+    custom: { pt: "Você", en: "You", es: "Tú", icon: "✎", period: "Sua frase" }
   };
 
   const order = [
@@ -105,6 +106,40 @@
     democritus: "assets/deities/hades.png",
     pythagoras: "assets/deities/apollo.png"
   };
+
+  const COLLECTIONS = [
+    { title: "Sabedoria", category: "Sabedoria", image: "athena" },
+    { title: "Coragem", category: "Coragem", image: "ares" },
+    { title: "Amor", category: "Amor", image: "aphrodite" },
+    { title: "Serenidade", category: "Serenidade", image: "hestia" },
+    { title: "Foco", category: "Foco", image: "artemis" },
+    { title: "Transformação", category: "Transformação", image: "persephone" },
+    { title: "Poder", category: "Poder", image: "zeus" },
+    { title: "Cura", category: "Cura", image: "asclepius" }
+  ];
+
+  const MOODS = [
+    { label: "Calma", cat: "Serenidade" },
+    { label: "Foco", cat: "Foco" },
+    { label: "Coragem", cat: "Coragem" },
+    { label: "Amor", cat: "Amor" },
+    { label: "Sabedoria", cat: "Sabedoria" },
+    { label: "Força", cat: "Poder" },
+    { label: "Gratidão", cat: "Alegria" },
+    { label: "Cura", cat: "Cura" }
+  ];
+
+  const ACHIEVEMENTS = [
+    { id: "streak3", icon: "🔥", title: "Em chamas", desc: "3 dias seguidos", test: (s) => s.streak >= 3 },
+    { id: "streak7", icon: "⚡", title: "Constante", desc: "7 dias seguidos", test: (s) => s.streak >= 7 },
+    { id: "streak30", icon: "🏛️", title: "Disciplinado", desc: "30 dias seguidos", test: (s) => s.streak >= 30 },
+    { id: "seen10", icon: "📜", title: "Curioso", desc: "10 frases lidas", test: (s) => s.seen >= 10 },
+    { id: "seen50", icon: "📖", title: "Estudioso", desc: "50 frases lidas", test: (s) => s.seen >= 50 },
+    { id: "fav5", icon: "♥", title: "Colecionador", desc: "5 favoritas", test: (s) => s.favs >= 5 },
+    { id: "fav20", icon: "💛", title: "Apaixonado", desc: "20 favoritas", test: (s) => s.favs >= 20 },
+    { id: "create1", icon: "✎", title: "Autor", desc: "Criou uma frase", test: (s) => s.custom >= 1 },
+    { id: "intent5", icon: "🎯", title: "Intencional", desc: "5 intenções", test: (s) => s.intentions >= 5 }
+  ];
 
   const rows = [
     ["socrates", "Conhecimento", "Autodomínio", "Vence primeiro a tua própria desordem.", "First conquer your own disorder.", "Vence primero tu propio desorden.", "Inspiração socrática: antes de convencer o mundo, organiza a própria alma."],
@@ -227,7 +262,34 @@
     ["demeter", "Crescimento", "Plantio", "Planta hoje o que teu futuro vai agradecer.", "Plant today what your future will thank you for.", "Planta hoy lo que tu futuro agradecerá.", "A deusa da fertilidade inspira constância antes da recompensa."],
 
     ["asclepius", "Cura", "Paciência", "Cura é paciência repetida com esperança.", "Healing is patience repeated with hope.", "Sanar es paciencia repetida con esperanza.", "Asclépio representa restauração, escuta e cuidado com o ritmo da recuperação."],
-    ["asclepius", "Cura", "Escuta", "Escuta a dor sem deixar que ela governe.", "Listen to pain without letting it rule.", "Escucha el dolor sin dejar que gobierne.", "A sabedoria da cura começa ao reconhecer o sinal sem entregar a direção a ele."]
+    ["asclepius", "Cura", "Escuta", "Escuta a dor sem deixar que ela governe.", "Listen to pain without letting it rule.", "Escucha el dolor sin dejar que gobierne.", "A sabedoria da cura começa ao reconhecer o sinal sem entregar a direção a ele."],
+
+    ["zeno", "Estoicismo", "Controle", "Concentra-te no que depende de ti; solta o resto.", "Focus on what depends on you; release the rest.", "Concéntrate en lo que depende de ti; suelta lo demás.", "Núcleo estoico: energia no que está sob teu controle."],
+    ["zeno", "Estoicismo", "Resiliência", "O obstáculo de hoje é o treino da tua força.", "Today's obstacle is the training of your strength.", "El obstáculo de hoy es el entrenamiento de tu fuerza.", "A adversidade vira exercício de caráter."],
+    ["aristotle", "Ética", "Hábito", "Somos aquilo que repetidamente fazemos.", "We are what we repeatedly do.", "Somos lo que hacemos repetidamente.", "Paráfrase clássica: a excelência é hábito, não acaso."],
+    ["athena", "Foco", "Clareza", "Vê com clareza antes de agir; depois age sem hesitar.", "See clearly before acting; then act without hesitating.", "Ve con claridad antes de actuar; luego actúa sin dudar.", "Estratégia de Atena: discernir e então executar."],
+    ["athena", "Sabedoria", "Decisão", "Sabedoria é escolher a batalha certa.", "Wisdom is choosing the right battle.", "La sabiduría es elegir la batalla correcta.", "Foco vence dispersão."],
+    ["ares", "Coragem", "Ação", "A coragem cresce a cada passo que o medo tentou impedir.", "Courage grows with each step fear tried to stop.", "El coraje crece con cada paso que el miedo intentó frenar.", "Agir apesar do medo fortalece."],
+    ["ares", "Coragem", "Disciplina", "Força sem disciplina se gasta; com disciplina, constrói.", "Strength without discipline burns out; with discipline, it builds.", "La fuerza sin disciplina se agota; con disciplina, construye.", "Direção transforma ímpeto em resultado."],
+    ["hestia", "Serenidade", "Centro", "A paz mora em quem volta ao próprio centro.", "Peace lives in those who return to their center.", "La paz vive en quien vuelve a su centro.", "Héstia: calma é prática de retorno."],
+    ["hestia", "Serenidade", "Respiro", "Respira: o agora é o único lugar onde vives.", "Breathe: now is the only place you live.", "Respira: el ahora es el único lugar donde vives.", "Presença reduz o peso do que não é agora."],
+    ["aphrodite", "Amor", "Cuidado", "Amar é cuidar com atenção, não apenas sentir.", "To love is to care with attention, not only to feel.", "Amar es cuidar con atención, no solo sentir.", "Afrodite: beleza guiada por cuidado."],
+    ["eros", "Amor", "Coragem", "Amar exige a coragem de se mostrar inteiro.", "Loving takes the courage to show up whole.", "Amar exige el coraje de mostrarte entero.", "Eros maduro pede presença e verdade."],
+    ["zeus", "Poder", "Responsabilidade", "Todo poder verdadeiro carrega um dever.", "All true power carries a duty.", "Todo poder verdadero conlleva un deber.", "Zeus: soberania é responsabilidade."],
+    ["zeus", "Poder", "Autodomínio", "Governa-te primeiro; o resto segue.", "Govern yourself first; the rest follows.", "Gobiérnate primero; lo demás sigue.", "O comando começa por dentro."],
+    ["asclepius", "Cura", "Tempo", "Cura também é dar tempo ao que precisa sarar.", "Healing is also giving time to what must mend.", "Sanar también es dar tiempo a lo que debe sanar.", "Asclépio: paciência é parte do remédio."],
+    ["demeter", "Crescimento", "Constância", "O que se rega todo dia, floresce.", "What you water every day blossoms.", "Lo que riegas cada día florece.", "Deméter: constância antes da colheita."],
+    ["nike", "Vitória", "Preparo", "A vitória pertence a quem se preparou no escuro.", "Victory belongs to those who prepared in the dark.", "La victoria es de quien se preparó en la oscuridad.", "Nike: triunfo nasce do treino silencioso."],
+    ["apollo", "Ordem", "Medida", "Tudo no seu tempo e na sua medida.", "Everything in its time and measure.", "Todo a su tiempo y en su medida.", "Apolo: harmonia é proporção."],
+    ["heraclitus", "Mudança", "Aceitação", "Fluir com a mudança é mais forte que resistir.", "Flowing with change is stronger than resisting it.", "Fluir con el cambio es más fuerte que resistirlo.", "Heráclito: a vida é movimento."],
+    ["epicurus", "Prazer", "Suficiência", "Rico é quem sabe o quanto é suficiente.", "Rich is the one who knows what is enough.", "Rico es quien sabe cuánto es suficiente.", "Epicuro: o suficiente liberta."],
+    ["socrates", "Conhecimento", "Autoexame", "Uma vida sem exame perde o rumo.", "An unexamined life loses its way.", "Una vida sin examen pierde el rumbo.", "Sócrates: examinar é direcionar."],
+    ["plato", "Conhecimento", "Visão", "Eleva o olhar: o que buscas molda quem te tornas.", "Lift your gaze: what you seek shapes who you become.", "Eleva la mirada: lo que buscas moldea en quien te conviertes.", "Platão: a alma se orienta pelo que contempla."],
+    ["hephaestus", "Trabalho", "Persistência", "Toda obra-prima começa torta na bigorna.", "Every masterpiece starts crooked on the anvil.", "Toda obra maestra empieza torcida en el yunque.", "Hefesto: a forja exige repetição."],
+    ["artemis", "Foco", "Limite", "Proteger teu foco é dizer não com firmeza.", "Protecting your focus is saying no with firmness.", "Proteger tu enfoque es decir no con firmeza.", "Ártemis: foco se guarda com limites."],
+    ["persephone", "Transformação", "Recomeço", "Todo inverno guarda a semente da primavera.", "Every winter holds the seed of spring.", "Cada invierno guarda la semilla de la primavera.", "Perséfone: ciclos preparam o retorno."],
+    ["democritus", "Alegria", "Simplicidade", "A alegria nasce de querer menos e viver mais.", "Joy comes from wanting less and living more.", "La alegría nace de querer menos y vivir más.", "Demócrito: equilíbrio gera bom ânimo."],
+    ["hermes", "Comunicação", "Oportunidade", "A palavra certa na hora certa abre portas.", "The right word at the right time opens doors.", "La palabra justa en el momento justo abre puertas.", "Hermes: o tempo certo também é mensagem."]
   ];
 
   const quotes = rows.map((row, index) => ({
@@ -252,16 +314,21 @@
   document.addEventListener("DOMContentLoaded", init);
 
   function init() {
-    setupStreak();
-    const linked = handleDeepLink();
-    if (!linked) applyAutoRotation(false);
     bind();
+    setupStreak();
+    seedAchievements();
+    const linked = handleDeepLink();
+    if (!linked) {
+      maybeShowDaily();
+      applyAutoRotation(false);
+    }
     applyPrefs();
     renderAll();
     registerServiceWorker();
     scheduleNotificationCheck();
     scheduleRotationCheck();
-    maybeShowOnboarding();
+    maybeShowWelcome();
+    hideSplashSoon();
   }
 
   function defaults() {
@@ -299,7 +366,15 @@
       streak: 1,
       lastOpen: "",
       lastNotification: "",
-      lastRotationSlot: ""
+      lastRotationSlot: "",
+      lastDailyShown: "",
+      customQuotes: [],
+      focusAreas: [],
+      mood: null,
+      bg: "classico",
+      intentions: 0,
+      achievementsSeen: [],
+      achievementsInit: false
     };
   }
 
@@ -312,7 +387,11 @@
   }
 
   function save() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (error) {
+      /* armazenamento indisponível (ex.: navegação privada) — segue sem persistir */
+    }
   }
 
   function bind() {
@@ -326,6 +405,7 @@
 
     $("#profileShortcut").addEventListener("click", () => go("settings"));
     $("#searchShortcut").addEventListener("click", () => go("explore"));
+    $("#dailyCard").addEventListener("click", goToDaily);
     $("#nextQuote").addEventListener("click", () => move(1));
     $("#prevQuote").addEventListener("click", () => move(-1));
     $("#favQuote").addEventListener("click", () => toggleFavorite(currentQuote().id));
@@ -333,6 +413,19 @@
     $("#lockQuote").addEventListener("click", () => setLockQuote(currentQuote().id));
     $("#detailsQuote").addEventListener("click", () => openDetails(currentQuote().id));
     $("#shuffleQuote").addEventListener("click", shuffle);
+    $("#createOpen").addEventListener("click", openCreate);
+    $("#createSave").addEventListener("click", saveCustomQuote);
+    $("#collections").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-collection]");
+      if (button) openCollection(button.dataset.collection);
+    });
+    $("#moodCard").addEventListener("click", (event) => {
+      const pick = event.target.closest("[data-mood]");
+      if (pick) { chooseMood(pick.dataset.mood, pick.dataset.cat); return; }
+      const see = event.target.closest("[data-mood-see]");
+      if (see) { openCollection(see.dataset.moodSee); return; }
+      if (event.target.closest("[data-mood-reset]")) { state.mood = null; save(); renderMood(); }
+    });
 
     $("#quoteStage").addEventListener("pointerdown", (event) => {
       startX = event.clientX;
@@ -484,11 +577,14 @@
       state.imageQuality = event.target.value;
       save();
     });
-    $("#finishOnboarding").addEventListener("click", () => {
-      state.onboarded = true;
+    $("#bgMode").addEventListener("change", (event) => {
+      state.bg = event.target.value;
       save();
-      $("#onboardingDialog").close();
+      applyPrefs();
     });
+    $("#welcomeStart").addEventListener("click", finishWelcome);
+    $("#redoWelcome").addEventListener("click", openWelcome);
+    $("#logout").addEventListener("click", logout);
 
     $$("[data-close]").forEach((button) => {
       button.addEventListener("click", () => {
@@ -503,9 +599,15 @@
   }
 
   function renderAll() {
+    normalizeSelections();
     renderScreens();
     renderAuthors();
+    renderCollections();
     renderFilters();
+    renderDaily();
+    renderGreeting();
+    renderMood();
+    renderStreakChip();
     renderHome(false);
     renderLibrary();
     renderFavorites();
@@ -519,20 +621,19 @@
   }
 
   function renderAuthors() {
-    $("#authorChips").innerHTML = order.map((id) => {
+    $("#authorChips").innerHTML = authorOrder().map((id) => {
       const item = authors[id];
       return `<button class="chip ${state.selectedAuthor === id ? "active" : ""}" type="button" data-author="${id}">${escapeHtml(item.icon)} ${escapeHtml(authorName(id))}</button>`;
     }).join("");
   }
 
   function renderFilters() {
-    $("#authorFilter").innerHTML = order.map((id) => {
-      const item = authors[id];
+    $("#authorFilter").innerHTML = authorOrder().map((id) => {
       return `<option value="${id}">${escapeHtml(authorName(id))}</option>`;
     }).join("");
     $("#authorFilter").value = state.authorFilter;
 
-    const themes = [...new Set(quotes.map((quote) => quote.category))].sort((a, b) => a.localeCompare(b));
+    const themes = [...new Set(pool().map((quote) => quote.category))].sort((a, b) => a.localeCompare(b));
     $("#themeFilter").innerHTML = `<option value="all">Todos</option>${themes.map((theme) => `<option value="${escapeHtml(theme)}">${escapeHtml(theme)}</option>`).join("")}`;
     $("#themeFilter").value = state.themeFilter;
   }
@@ -543,14 +644,15 @@
     state.seen[quote.id] = state.seen[quote.id] || Date.now();
     $("#quoteTheme").textContent = `${quote.category} · ${quote.theme}`;
     $("#quoteText").textContent = `“${quoteText(quote)}”`;
-    $("#quoteAuthor").textContent = authorName(quote.author);
+    $("#quoteAuthor").textContent = displayAuthor(quote);
     $("#quotePeriod").textContent = author.period;
     $("#authorIcon").textContent = author.icon;
     $("#authorImage").src = imageForQuote(quote);
-    $("#authorImage").alt = authorName(quote.author);
-    $("#authorVisualLabel").textContent = authorName(quote.author);
+    $("#authorImage").alt = displayAuthor(quote);
+    $("#authorVisualLabel").textContent = displayAuthor(quote);
     $("#quoteCounter").textContent = `${homeList().indexOf(quote) + 1} / ${homeList().length}`;
     $("#quoteLanguage").textContent = LANG_LABEL[state.lang] || "Português";
+    $("#dailyBadge").hidden = quote.id !== dailyQuote().id;
     $("#favQuote").textContent = state.favs[quote.id] ? "♥" : "♡";
     $("#favQuote").classList.toggle("favorite", Boolean(state.favs[quote.id]));
     if (animate) {
@@ -564,7 +666,7 @@
   function renderLibrary() {
     $("#librarySearch").value = state.librarySearch;
     const query = normalize(state.librarySearch);
-    const items = quotes.filter((quote) => {
+    const items = pool().filter((quote) => {
       if (state.authorFilter !== "all" && quote.author !== state.authorFilter) return false;
       if (state.themeFilter !== "all" && quote.category !== state.themeFilter) return false;
       if (!query) return true;
@@ -578,7 +680,7 @@
     $("#favoriteSort").value = state.favoriteSort;
     $("#favoriteCount").textContent = Object.keys(state.favs).length;
     const query = normalize(state.favoriteSearch);
-    const items = quotes.filter((quote) => state.favs[quote.id])
+    const items = pool().filter((quote) => state.favs[quote.id])
       .filter((quote) => !query || searchable(quote).includes(query))
       .sort(sortFavorites);
     $("#favoriteList").innerHTML = items.length ? items.map(card).join("") : `<div class="empty">Suas frases favoritas aparecerão aqui.</div>`;
@@ -593,7 +695,7 @@
     preview.style.setProperty("--deity-image", `url("${imageForQuote(quote)}")`);
     preview.classList.add("image");
     $("#lockPreviewQuote").textContent = `“${quoteText(quote)}”`;
-    $("#lockPreviewAuthor").textContent = authorName(quote.author);
+    $("#lockPreviewAuthor").textContent = displayAuthor(quote);
     $("#lockFont").value = state.lockFont;
     $("#lockFontSize").value = state.lockFontSize;
     $("#lockPreviewQuote").style.fontFamily = fontFamily(state.lockFont);
@@ -620,6 +722,8 @@
     $("#profileShortcut").textContent = (state.name || "G").slice(0, 1).toUpperCase();
     $("#profileFallback").textContent = (state.name || "GW").slice(0, 2).toUpperCase();
     $("#imageQuality").value = state.imageQuality;
+    $("#bgMode").value = state.bg || "classico";
+    renderAchievements();
     $("#hapticEnabled").checked = state.haptics;
     $("#soundEnabled").checked = state.sound;
     const avatar = $(".avatar-picker");
@@ -638,22 +742,26 @@
     $("#statSeen").textContent = Object.keys(state.seen).length;
     $("#statFavs").textContent = Object.keys(state.favs).length;
     $("#statStreak").textContent = state.streak;
+    checkAchievements();
   }
 
   function card(quote) {
-    const author = authors[quote.author];
     const fav = Boolean(state.favs[quote.id]);
+    const del = quote.custom
+      ? `<button type="button" data-action="delete" data-id="${quote.id}" aria-label="Excluir frase">🗑</button>`
+      : "";
     return `
       <article class="quote-card">
         <img class="quote-card-image" src="${escapeHtml(imageForQuote(quote))}" alt="" loading="lazy" />
         <p>“${escapeHtml(quoteText(quote))}”</p>
         <footer>
-          <small>${escapeHtml(authorName(quote.author))} · ${escapeHtml(quote.theme)}</small>
+          <small>${escapeHtml(displayAuthor(quote))} · ${escapeHtml(quote.theme)}</small>
           <div class="mini-actions">
             <button type="button" data-action="details" data-id="${quote.id}" aria-label="Detalhes">i</button>
             <button type="button" data-action="favorite" data-id="${quote.id}" aria-label="Favoritar">${fav ? "♥" : "♡"}</button>
             <button type="button" data-action="share" data-id="${quote.id}" aria-label="Compartilhar">↗</button>
             <button type="button" data-action="lock" data-id="${quote.id}" aria-label="Tela de bloqueio">▣</button>
+            ${del}
           </div>
         </footer>
       </article>
@@ -668,6 +776,7 @@
     if (button.dataset.action === "favorite") toggleFavorite(id);
     if (button.dataset.action === "share") openShare(id);
     if (button.dataset.action === "lock") setLockQuote(id);
+    if (button.dataset.action === "delete") deleteCustomQuote(id);
   }
 
   function currentQuote() {
@@ -676,7 +785,7 @@
   }
 
   function homeList() {
-    return state.selectedAuthor === "all" ? quotes : quotes.filter((quote) => quote.author === state.selectedAuthor);
+    return state.selectedAuthor === "all" ? pool() : pool().filter((quote) => quote.author === state.selectedAuthor);
   }
 
   function move(step) {
@@ -688,11 +797,208 @@
 
   function shuffle() {
     state.selectedAuthor = "all";
-    state.cursor = Math.floor(Math.random() * quotes.length);
+    state.cursor = Math.floor(Math.random() * pool().length);
     save();
     go("home");
     renderAuthors();
     renderHome(true);
+  }
+
+  function todayKey() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  }
+
+  function dailyIndex() {
+    const key = todayKey();
+    let hash = 0;
+    for (let i = 0; i < key.length; i += 1) hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
+    return hash % quotes.length;
+  }
+
+  function dailyQuote() {
+    return quotes[dailyIndex()];
+  }
+
+  function renderDaily() {
+    const quote = dailyQuote();
+    $("#dailyText").textContent = `“${quoteText(quote)}”`;
+    $("#dailyAuthor").textContent = displayAuthor(quote);
+  }
+
+  function renderCollections() {
+    const node = $("#collections");
+    if (!node) return;
+    const focus = Array.isArray(state.focusAreas) ? state.focusAreas : [];
+    const items = COLLECTIONS.slice().sort((a, b) => (focus.includes(b.category) ? 1 : 0) - (focus.includes(a.category) ? 1 : 0));
+    node.innerHTML = items.map((item) =>
+      `<button class="collection-card" type="button" data-collection="${escapeHtml(item.category)}" style="--col-image:url('${DEITY_IMAGES[item.image]}')"><span>${escapeHtml(item.title)}</span></button>`
+    ).join("");
+  }
+
+  function todayMood() {
+    return state.mood && state.mood.date === todayKey() ? state.mood : null;
+  }
+
+  function renderMood() {
+    const node = $("#moodCard");
+    if (!node) return;
+    const mood = todayMood();
+    if (mood) {
+      node.innerHTML =
+        `<div class="mood-done">` +
+        `<div><span class="eyebrow">Sua intenção de hoje</span><strong>${escapeHtml(mood.label)}</strong></div>` +
+        `<div class="mood-actions"><button type="button" class="mood-chip" data-mood-see="${escapeHtml(mood.cat)}">Ver frases</button>` +
+        `<button type="button" class="mood-chip ghost" data-mood-reset>Trocar</button></div>` +
+        `</div>`;
+    } else {
+      node.innerHTML =
+        `<span class="eyebrow">Como você quer se sentir hoje?</span>` +
+        `<div class="mood-chips">${MOODS.map((m) => `<button type="button" class="mood-chip" data-mood="${escapeHtml(m.label)}" data-cat="${escapeHtml(m.cat)}">${escapeHtml(m.label)}</button>`).join("")}</div>`;
+    }
+  }
+
+  function chooseMood(label, cat) {
+    state.mood = { date: todayKey(), label, cat };
+    state.intentions = (state.intentions || 0) + 1;
+    const list = pool().filter((quote) => quote.category === cat);
+    if (list.length) {
+      state.selectedAuthor = "all";
+      const quote = list[Math.floor(Math.random() * list.length)];
+      state.cursor = pool().indexOf(quote);
+    }
+    save();
+    renderMood();
+    renderAuthors();
+    renderHome(true);
+    toast(`Intenção de hoje: ${label}.`);
+  }
+
+  function renderStreakChip() {
+    const el = $("#streakChip");
+    if (!el) return;
+    const n = state.streak || 1;
+    el.textContent = `🔥 ${n} ${n === 1 ? "dia" : "dias"}`;
+  }
+
+  function achievementStats() {
+    return {
+      streak: state.streak || 1,
+      seen: Object.keys(state.seen || {}).length,
+      favs: Object.keys(state.favs || {}).length,
+      custom: customList().length,
+      intentions: state.intentions || 0
+    };
+  }
+
+  function unlockedAchievementIds() {
+    const stats = achievementStats();
+    return ACHIEVEMENTS.filter((a) => a.test(stats)).map((a) => a.id);
+  }
+
+  function seedAchievements() {
+    if (state.achievementsInit) return;
+    state.achievementsSeen = unlockedAchievementIds();
+    state.achievementsInit = true;
+    save();
+  }
+
+  function checkAchievements() {
+    const unlocked = unlockedAchievementIds();
+    const seen = Array.isArray(state.achievementsSeen) ? state.achievementsSeen : [];
+    const fresh = unlocked.filter((id) => !seen.includes(id));
+    if (!fresh.length) return;
+    state.achievementsSeen = seen.concat(fresh);
+    save();
+    const achievement = ACHIEVEMENTS.find((a) => a.id === fresh[0]);
+    if (achievement) toast(`Conquista: ${achievement.icon} ${achievement.title}`);
+  }
+
+  function renderAchievements() {
+    const node = $("#achievements");
+    if (!node) return;
+    const unlocked = unlockedAchievementIds();
+    node.innerHTML = ACHIEVEMENTS.map((a) => {
+      const on = unlocked.includes(a.id);
+      return `<div class="badge ${on ? "on" : ""}"><span class="badge-icon">${a.icon}</span><strong>${escapeHtml(a.title)}</strong><small>${escapeHtml(a.desc)}</small></div>`;
+    }).join("");
+  }
+
+  function openCollection(category) {
+    state.authorFilter = "all";
+    state.themeFilter = category;
+    state.librarySearch = "";
+    save();
+    go("explore");
+    renderLibrary();
+    $("#libraryList").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function openCreate() {
+    $("#createText").value = "";
+    $("#createAuthor").value = "";
+    $("#createDialog").showModal();
+  }
+
+  function saveCustomQuote() {
+    const text = $("#createText").value.trim();
+    if (!text) {
+      toast("Escreva sua frase.");
+      return;
+    }
+    const authorLabel = $("#createAuthor").value.trim();
+    const quote = {
+      id: `custom_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+      author: "custom",
+      authorLabel,
+      category: "Minhas frases",
+      theme: "Pessoal",
+      text: { pt: text, en: text, es: text },
+      explain: "",
+      custom: true
+    };
+    state.customQuotes = customList().concat(quote);
+    state.authorFilter = "custom";
+    state.themeFilter = "all";
+    state.librarySearch = "";
+    save();
+    $("#createDialog").close();
+    go("explore");
+    renderAll();
+    toast("Frase criada.");
+  }
+
+  function deleteCustomQuote(id) {
+    state.customQuotes = customList().filter((quote) => quote.id !== id);
+    delete state.favs[id];
+    delete state.seen[id];
+    if (state.lockQuote === id) state.lockQuote = "quote_001";
+    if (shareQuoteId === id) shareQuoteId = quotes[0].id;
+    save();
+    renderAll();
+    toast("Frase removida.");
+  }
+
+  function maybeShowDaily() {
+    if (state.lastDailyShown === todayKey()) return false;
+    state.selectedAuthor = "all";
+    state.cursor = dailyIndex();
+    state.lastDailyShown = todayKey();
+    state.screen = "home";
+    save();
+    return true;
+  }
+
+  function goToDaily() {
+    state.selectedAuthor = "all";
+    state.cursor = dailyIndex();
+    state.lastDailyShown = todayKey();
+    save();
+    go("home");
+    renderAuthors();
+    renderHome(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    toast("Frase do dia.");
   }
 
   function go(screen) {
@@ -726,10 +1032,10 @@
 
   function openDetails(id) {
     const quote = findQuote(id);
-    $("#detailsAuthorName").textContent = authorName(quote.author);
+    $("#detailsAuthorName").textContent = displayAuthor(quote);
     $("#detailsText").textContent = `“${quoteText(quote)}”`;
-    $("#detailsExplain").textContent = quote.explain;
-    $("#detailsTags").innerHTML = [quote.category, quote.theme, authors[quote.author].period].map((tag) => `<span>${escapeHtml(tag)}</span>`).join("");
+    $("#detailsExplain").textContent = quote.explain || (quote.custom ? "Sua frase pessoal." : "");
+    $("#detailsTags").innerHTML = [quote.category, quote.theme, (authors[quote.author] || authors.all).period].map((tag) => `<span>${escapeHtml(tag)}</span>`).join("");
     $("#detailsDialog").showModal();
   }
 
@@ -743,7 +1049,7 @@
     const quote = findQuote(shareQuoteId);
     return {
       title: "Greek Wisdom",
-      text: `“${quoteText(quote)}” - ${authorName(quote.author)}\nCompartilhado via Greek Wisdom`,
+      text: `“${quoteText(quote)}” - ${displayAuthor(quote)}\nCompartilhado via Greek Wisdom`,
       url: `${location.origin}${location.pathname}?quote=${encodeURIComponent(quote.id)}`
     };
   }
@@ -794,7 +1100,7 @@
     wrapText(ctx, `“${quoteText(quote)}”`, 540, 860, 760, 92, 7);
     ctx.fillStyle = "#d4af37";
     ctx.font = "600 42px Segoe UI, Arial";
-    ctx.fillText(authorName(quote.author), 540, 1295);
+    ctx.fillText(displayAuthor(quote), 540, 1295);
     ctx.fillStyle = "rgba(255,255,255,.64)";
     ctx.font = "400 28px Segoe UI, Arial";
     ctx.fillText("greek-wisdom.app", 540, 1710);
@@ -875,6 +1181,7 @@
 
   function applyPrefs() {
     $("#appShell").classList.toggle("dark", state.dark);
+    $("#appShell").dataset.bg = state.bg || "classico";
     document.documentElement.style.setProperty("--quote-font", fontFamily(state.font));
     document.documentElement.style.setProperty("--quote-size", `${state.fontSize}px`);
     document.documentElement.style.setProperty("--quote-x", `${state.quoteOffsetX}px`);
@@ -896,16 +1203,17 @@
 
   function sortFavorites(a, b) {
     if (state.favoriteSort === "alpha") return quoteText(a).localeCompare(quoteText(b));
-    if (state.favoriteSort === "author") return authors[a.author].pt.localeCompare(authors[b.author].pt);
+    if (state.favoriteSort === "author") return displayAuthor(a).localeCompare(displayAuthor(b));
     return (state.favs[b.id] || 0) - (state.favs[a.id] || 0);
   }
 
   function searchable(quote) {
-    const author = authors[quote.author];
+    const author = authors[quote.author] || authors.all;
     return normalize([
       quote.text.pt,
       quote.text.en,
       quote.text.es,
+      quote.authorLabel || "",
       author.pt,
       author.en,
       author.es,
@@ -915,8 +1223,30 @@
     ].join(" "));
   }
 
+  function customList() {
+    return Array.isArray(state.customQuotes) ? state.customQuotes : [];
+  }
+
+  function pool() {
+    return quotes.concat(customList());
+  }
+
+  function authorOrder() {
+    return customList().length ? order.concat("custom") : order;
+  }
+
+  function displayAuthor(quote) {
+    return quote && quote.authorLabel ? quote.authorLabel : authorName(quote.author);
+  }
+
+  function normalizeSelections() {
+    const ids = authorOrder();
+    if (!ids.includes(state.selectedAuthor)) state.selectedAuthor = "all";
+    if (!ids.includes(state.authorFilter)) state.authorFilter = "all";
+  }
+
   function findQuote(id) {
-    return quotes.find((quote) => quote.id === id) || quotes[0];
+    return pool().find((quote) => quote.id === id) || quotes[0];
   }
 
   function langBase() {
@@ -965,9 +1295,55 @@
     return false;
   }
 
-  function maybeShowOnboarding() {
+  function maybeShowWelcome() {
     if (state.onboarded) return;
-    requestAnimationFrame(() => $("#onboardingDialog").showModal());
+    openWelcome();
+  }
+
+  function openWelcome() {
+    $("#welcomeName").value = state.name || "";
+    $("#welcome").hidden = false;
+  }
+
+  function finishWelcome() {
+    state.name = ($("#welcomeName").value || state.name || "").trim();
+    state.onboarded = true;
+    save();
+    $("#welcome").hidden = true;
+    renderAll();
+  }
+
+  function logout() {
+    state.onboarded = false;
+    state.name = "";
+    state.photo = "";
+    save();
+    renderSettings();
+    openWelcome();
+    toast("Você saiu da conta.");
+  }
+
+  function timeGreeting() {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Bom dia";
+    if (hour < 18) return "Boa tarde";
+    return "Boa noite";
+  }
+
+  function renderGreeting() {
+    const el = $("#greeting");
+    if (!el) return;
+    const name = state.name ? state.name.split(" ")[0] : "";
+    el.textContent = name ? `${timeGreeting()}, ${name}.` : "";
+  }
+
+  function hideSplashSoon() {
+    const splash = $("#splash");
+    if (!splash) return;
+    setTimeout(() => {
+      splash.classList.add("hide");
+      setTimeout(() => { splash.hidden = true; }, 550);
+    }, 650);
   }
 
   function handleProfilePhoto(event) {
